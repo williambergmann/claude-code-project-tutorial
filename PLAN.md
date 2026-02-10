@@ -584,6 +584,10 @@ This is NOT one-shot-and-done. It's iterative and intentional.
 
 At the start of each phase, run `/clear` in Claude Code to reset context. CLAUDE.md provides continuity — Claude reads it fresh every session. This keeps token usage lean and quality high.
 
+### Page-at-a-Time Pacing
+
+Every step in every phase doc fits roughly one screen. Each step ends with a checkpoint: verification tasks, a commit command, and three options (continue / compare with reference / fix something). No scrolling back to catch up. The user is always in control of the pace.
+
 ### CLAUDE.md Evolution
 
 The guide shows CLAUDE.md at the end of each phase with additions highlighted. It starts minimal in Phase 0 and grows organically as conventions emerge. By Phase 7 it's a mature, useful document — not because it was templated, but because it was built through experience (Principle 8).
@@ -653,3 +657,30 @@ CHANGELOG.md, REQUIREMENTS.md, and BUGS.md are mandatory steps in this tutorial 
 
 ### 3. "What goes wrong" detour: included
 An appendix (`docs/appendix-what-goes-wrong.md`) walks through what happens when you violate the principles — vague mega-prompts, skipped diff reviews, bloated context. It's part of the tutorial but positioned after the main path so it doesn't slow down the primary flow. Makes the principles tangible instead of preachy.
+
+### 4. Page-at-a-time pacing with checkpoints
+Each phase doc is broken into small steps (one screen of content each). Every step ends with a verification checkpoint before the user moves on. No walls of text. The user controls the pace.
+
+Step format:
+```markdown
+### Step 1.2: Scaffold the Backend
+
+**Principle in action:** The first few thousand lines determine everything (P1)
+
+[2-3 paragraphs of context + the prompt to use]
+
+**Verify before continuing:**
+- [ ] `backend/` directory exists with the expected structure
+- [ ] `python -m uvicorn app.main:app` starts without errors
+- [ ] `http://localhost:8000/docs` shows the Swagger UI
+
+**Commit:**
+git add backend/
+git commit -m "feat: scaffold FastAPI backend with health endpoint"
+
+Ready? → Step 1.3
+Stuck? → Compare with reference/expense-tracker/
+Need to adjust? → Update CLAUDE.md before continuing
+```
+
+This prevents the "scroll back to catch up" problem and gives the user three clear options at every gate: continue, compare, or course-correct.

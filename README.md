@@ -192,16 +192,28 @@ docs/phase-2-backend.md      →    You build models + API
 docs/phase-7-docker.md       →    You run: docker compose up
 ```
 
-### Every step follows this rhythm:
+### One step at a time — no walls of text
+
+Every step fits on one screen and ends with a checkpoint:
 
 ```
  1. Read the context         Why this step matters, which principle it demonstrates
  2. Prompt Claude            Exact text to use in Claude Code CLI
  3. Review the diff          What to look for — the guide tells you specifically
  4. "Continue" or correct    Iterate with Claude until it's right
- 5. Commit + push            Named files, meaningful message, push at phase end
- 6. Update tracking files    REQUIREMENTS.md, CHANGELOG.md, BUGS.md as needed
+ 5. Verify                   Checklist to confirm it works before moving on
+ 6. Commit                   Named files, meaningful message
 ```
+
+At every checkpoint you have three options:
+
+```
+ Ready?   → Move to the next step
+ Stuck?   → Compare with the reference implementation
+ Off?     → Update CLAUDE.md or fix the issue before continuing
+```
+
+You never have to scroll back to figure out where you are.
 
 ### Token budget strategy
 
