@@ -52,7 +52,8 @@ claude-code-project-tutorial/
 │   ├── phase-4-integration.md    # Connect FE↔BE, CORS, end-to-end
 │   ├── phase-5-parallel.md       # Two Claude instances, branches, merge
 │   ├── phase-6-hardening.md      # Tests, security audit, diff review exercise
-│   └── phase-7-docker.md         # Containerize, docker-compose up, done
+│   ├── phase-7-docker.md         # Containerize, docker-compose up, done
+│   └── appendix-what-goes-wrong.md  # What happens when you break the principles
 ├── templates/                    # Starter files the user copies into their project
 │   ├── CLAUDE.md.starter         # Minimal Phase 0 version
 │   ├── CHANGELOG.md              # Format example + a couple entries
@@ -360,21 +361,13 @@ Each of these follows the same process: update REQUIREMENTS.md, update CLAUDE.md
 
 ---
 
-## Open Questions (Awaiting Input)
+## Decisions (Resolved)
 
-### 1. Reference implementations: branches or folders?
-- **Branches:** Cleaner git history, can use `git log` and `git diff` between tags. Harder to browse on GitHub (must switch branches).
-- **Folders:** Easier to browse side-by-side on GitHub. No git history per project. More files in the repo.
-- **Recommendation:** Folders in the repo for easy browsing, PLUS a `reference-history` branch with tagged commits for users who want to compare git logs.
+### 1. Reference implementations: both folders AND branches
+Completed implementations live in `reference/` folders for easy GitHub browsing. A separate `reference-history` branch contains the same code with tagged commits matching each phase (`v0-setup`, `v1-foundation`, etc.) so users can compare their git log against the intended progression.
 
-### 2. CHANGELOG/REQUIREMENTS/BUGS: mandatory or recommended?
-- **Option A:** Mandatory — every phase step includes updating them.
-- **Option B:** Recommended sidebar — mentioned in Phase 0, with occasional reminders, but not blocking progress.
-- **Recommendation:** Introduced as mandatory in Phase 0, but framed as "this is how we do it in this tutorial — adapt to your own workflow" (Principle 9).
+### 2. Tracking files: mandatory in this tutorial, not universal
+CHANGELOG.md, REQUIREMENTS.md, and BUGS.md are mandatory steps in this tutorial — every phase includes updating them. But the guide frames this honestly: "This is how we structure this project. It's not required in every situation. Adapt to your own workflow." (Principle 9)
 
-### 3. "What goes wrong" detour: include or skip?
-- **Include:** Makes principles tangible. ~5 min detour. Could be an optional appendix.
-- **Skip:** Keeps tutorial on happy path, respects time budget.
-- **Recommendation:** Include as an optional appendix (`docs/appendix-what-goes-wrong.md`) so it doesn't slow down the main path but is available for curious users.
-
-### 4. Anything else to add or change before we start building?
+### 3. "What goes wrong" detour: included
+An appendix (`docs/appendix-what-goes-wrong.md`) walks through what happens when you violate the principles — vague mega-prompts, skipped diff reviews, bloated context. It's part of the tutorial but positioned after the main path so it doesn't slow down the primary flow. Makes the principles tangible instead of preachy.
