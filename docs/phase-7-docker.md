@@ -1,0 +1,190 @@
+# Phase 7: Docker & Ship
+
+**Time:** ~5 minutes | **Tokens:** Low
+
+**Principles in action:**
+- P8: Agent experience is a priority — retrospective on the whole process
+
+> **Start by running `/clear`** to reset context. Claude will re-read your CLAUDE.md.
+
+---
+
+## Step 7.1: Create the Backend Dockerfile
+
+```
+Create a Dockerfile for the FastAPI backend at backend/Dockerfile.
+- Use python:3.11-slim as the base image
+- Install dependencies from requirements.txt
+- Run with uvicorn on port 8000
+- Don't run as root — create a non-root user
+Keep it simple. No multi-stage build needed for this project.
+```
+
+**Review the diff:**
+- [ ] Uses a slim base image (not the full `python:3.11`)
+- [ ] Copies requirements.txt and installs dependencies before copying code (layer caching)
+- [ ] Runs as a non-root user
+- [ ] Exposes port 8000
+
+**Commit:**
+```bash
+git add backend/Dockerfile
+git commit -m "feat: add backend Dockerfile"
+```
+
+---
+
+## Step 7.2: Create the Frontend Dockerfile
+
+```
+Create a Dockerfile for the React frontend at frontend/Dockerfile.
+- Build stage: use node:18-slim, install deps, run npm run build
+- Serve stage: use nginx:alpine to serve the built files
+- Copy a simple nginx.conf that serves the SPA (all routes → index.html)
+- Serve on port 80
+```
+
+**Review the diff:**
+- [ ] Multi-stage build (node for building, nginx for serving)
+- [ ] `.dockerignore` or explicit COPY avoids `node_modules` in the image
+- [ ] nginx config handles SPA routing (all paths → index.html)
+
+**Commit:**
+```bash
+git add frontend/Dockerfile frontend/nginx.conf
+git commit -m "feat: add frontend Dockerfile with nginx"
+```
+
+---
+
+## Step 7.3: Create docker-compose.yml
+
+```
+Create a docker-compose.yml at the project root that:
+- Runs the backend service on port 8000
+- Runs the frontend service on port 3000
+- Frontend proxies API requests to the backend (or update CORS for Docker network)
+- Both services build from their respective Dockerfiles
+Keep it simple. No Postgres yet — SQLite is fine for this demo.
+```
+
+**Review the diff:**
+- [ ] Both services defined with `build` pointing to their directories
+- [ ] Ports mapped correctly (8000 for API, 3000 for frontend)
+- [ ] Backend is accessible from frontend container (Docker network or environment variable)
+
+**Commit:**
+```bash
+git add docker-compose.yml
+git commit -m "feat: add docker-compose.yml for full stack"
+```
+
+---
+
+## Step 7.4: Launch It
+
+Make sure Docker Desktop is running, then:
+
+```bash
+docker compose up --build
+```
+
+Wait for both services to build and start. Then open your browser:
+
+- **Frontend:** `http://localhost:3000`
+- **Backend API:** `http://localhost:8000/docs`
+
+**Verify:**
+- [ ] Frontend loads in the browser
+- [ ] You can create, edit, and delete items
+- [ ] The Swagger UI is accessible
+- [ ] Data persists within the session (SQLite inside the container)
+
+If something doesn't work, check the logs in the terminal. Common issues:
+- CORS needs to allow `http://localhost:3000` (not just `5173`)
+- Frontend API client needs to use the correct backend URL in Docker
+- Port conflicts with other running services
+
+Stop with `Ctrl+C` when you're done testing.
+
+> **Stuck?** Compare with `reference/expense-tracker/docker-compose.yml`
+
+---
+
+## Step 7.5: Final Commit, Tag, and Push
+
+```bash
+# Update CLAUDE.md with Docker commands
+# Add to "Key Commands" section:
+# docker compose up --build
+# docker compose down
+
+git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md
+git commit -m "docs: final updates for Phase 7 — Docker and ship"
+
+git push
+
+# Tag the release
+git tag v1.0
+git push origin v1.0
+```
+
+**Verify before continuing:**
+- [ ] `git log --oneline` shows a clean, readable history
+- [ ] `v1.0` tag exists on GitHub
+- [ ] All items in REQUIREMENTS.md are checked off
+
+---
+
+## Step 7.6: Retrospective
+
+You're done building. Take 2 minutes to reflect on the process (P8).
+
+**Questions to consider:**
+
+**About CLAUDE.md:**
+- What would you change if you started over?
+- What conventions did you add mid-project that should have been there from the start?
+- Is there anything in CLAUDE.md that Claude ignores?
+
+**About the 1-shot test (P4):**
+- Which prompts worked in one shot?
+- Which required multiple tries? Why?
+- Did the 1-shot success rate improve or decline as the project grew?
+
+**About your skills:**
+- Which of the 3 skills (`/add-endpoint`, `/add-component`, `/review-diff`) was most useful?
+- Would you build any additional skills for your next project?
+- Did the `!`command`` context injection work well?
+
+**About the workflow:**
+- Did `/clear` between phases keep token usage manageable?
+- Was the commit rhythm natural or forced?
+- Would you change the tracking files (CHANGELOG, REQUIREMENTS, BUGS)?
+
+Write your answers in CHANGELOG.md or keep them for yourself. The point is to invest in the process, not just the output (P8).
+
+---
+
+## Tutorial Complete
+
+**What you built:**
+- A full-stack application with Python backend and React frontend
+- Running in Docker with one command
+- With a clean git history, meaningful commits, and phase tags
+
+**What you learned:**
+- How to establish patterns that scale (P1)
+- How to run parallel agents without chaos (P2)
+- How to review diffs for subtle bugs (P12)
+- How to build custom skills from observed patterns (P9)
+- How to set up permissions, hooks, and MCP for workflow efficiency
+- When to push back on Claude's suggestions (P11, P13)
+
+**What's next:**
+- [What's Next section in the README](../README.md#whats-next-after-the-tutorial) — auth, Postgres, CI/CD, deployment
+- [Appendix: What Goes Wrong](appendix-what-goes-wrong.md) — see what happens when you break the principles
+
+---
+
+You shipped. The workflow is yours now. Make it better (P9).
