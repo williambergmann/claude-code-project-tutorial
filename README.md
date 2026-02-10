@@ -28,13 +28,13 @@ Or bring your own idea — any CRUD app with a frontend and backend works.
 This isn't about learning to code. It's about learning to **work with an AI coding agent effectively**.
 
 ```
-Phase 0  Setup & Decisions       ~5 min     Tech stack reasoning, CLAUDE.md, project tracking
-Phase 1  Foundation              ~10 min    Scaffold both apps, establish patterns that scale
-Phase 2  Backend Core            ~10 min    Models, API endpoints, diff review discipline
-Phase 3  Frontend Core           ~10 min    Pages, components, the "continue" workflow
-Phase 4  Integration             ~10 min    Connect FE↔BE, catch your first planted bug
-Phase 5  Parallel Work           ~10 min    Two Claude instances, two branches, zero conflicts
-Phase 6  Hardening               ~5 min     Tests, security audit, spot the subtle bug
+Phase 0  Setup & Decisions       ~5 min     /init, permissions, CLAUDE.md, project tracking
+Phase 1  Foundation              ~10 min    Plan mode, scaffold both apps, first skill
+Phase 2  Backend Core            ~10 min    Models, API, diff review discipline
+Phase 3  Frontend Core           ~10 min    Components, second skill, "continue" workflow
+Phase 4  Integration             ~10 min    Connect FE↔BE, catch the planted bug
+Phase 5  Parallel Work           ~10 min    Git worktrees, GitHub MCP, two agents
+Phase 6  Hardening               ~5 min     /review-diff skill, lint hook, security audit
 Phase 7  Docker & Ship           ~5 min     Containerize, launch, retrospective
                                  ─────
                                  ~65 min total
@@ -44,8 +44,10 @@ By the end, you'll have:
 - A working app running in Docker
 - A git history that tells the story of a clean build
 - A CLAUDE.md that evolved with your project
-- Custom Claude Code skills you built from actual need
-- Experience running parallel agents without chaos
+- 3 custom skills (`/add-endpoint`, `/add-component`, `/review-diff`) built from actual need
+- Permission settings and a lint hook that make Claude safer and faster
+- A project-scoped MCP config for GitHub integration
+- Experience running parallel agents on git worktrees without chaos
 
 ---
 
@@ -63,7 +65,7 @@ Every phase maps back to these. They're not theory — they're the difference be
 | 6 | AI didn't speed up all steps equally | Phase 0 tech stack decisions |
 | 7 | Complex agent setups suck | One CLAUDE.md, not a pile of .md files |
 | 8 | Agent experience is a priority | CLAUDE.md evolves every phase |
-| 9 | Own your prompts, own your workflow | Custom skills in Phase 1, 5 |
+| 9 | Own your prompts, own your workflow | Custom skills in Phase 1, 3, 6 |
 | 10 | Process alignment is critical in teams | Phase 5 parallel work |
 | 11 | AI code is not optimized by default | Phase 2, 4, 6 reviews |
 | 12 | Check git diff for critical logic | Phase 2, 4, 6 diff exercises |
@@ -73,14 +75,104 @@ Every phase maps back to these. They're not theory — they're the difference be
 
 ## Prerequisites
 
-Before you start, make sure you have:
+You need 7 things installed. We'll help you check each one.
 
-- [ ] **Claude Code CLI** installed and authenticated ([install guide](https://docs.anthropic.com/en/docs/claude-code/overview))
-- [ ] **Claude Pro subscription** ($20/mo) — this tutorial fits in one token session
-- [ ] **Python 3.11+** ([python.org](https://www.python.org/downloads/))
-- [ ] **Node.js 18+** ([nodejs.org](https://nodejs.org/))
-- [ ] **Git** configured with a GitHub account
-- [ ] **Docker Desktop** installed ([download here](https://www.docker.com/products/docker-desktop/)) — used in Phase 7
+### 1. Claude Code CLI + Claude Pro subscription
+
+You need an active **Claude Pro** ($20/mo) or **Max** subscription. The tutorial fits in one token session.
+
+```bash
+# Install Claude Code CLI
+npm install -g @anthropic-ai/claude-code
+
+# Verify it works (this will prompt you to authenticate if needed)
+claude --version
+```
+
+If you don't have npm yet, install Node.js first (step 4 below).
+
+[Full install guide](https://docs.anthropic.com/en/docs/claude-code/overview)
+
+### 2. Python 3.11+
+
+```bash
+# Check if you have it
+python3 --version
+
+# macOS (with Homebrew)
+brew install python@3.11
+
+# Windows
+# Download from https://www.python.org/downloads/
+# Check "Add to PATH" during installation
+
+# Linux (Ubuntu/Debian)
+sudo apt update && sudo apt install python3.11 python3.11-venv
+```
+
+### 3. Node.js 18+
+
+```bash
+# Check if you have it
+node --version
+
+# macOS (with Homebrew)
+brew install node
+
+# Windows / Linux — use the official installer or nvm
+# https://nodejs.org/
+# Or with nvm: nvm install 18
+```
+
+### 4. Git + GitHub account
+
+```bash
+# Check if you have it
+git --version
+
+# macOS
+brew install git
+
+# Configure (if not already done)
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+You also need a [GitHub account](https://github.com/signup) and the GitHub CLI:
+
+```bash
+# Install GitHub CLI
+brew install gh          # macOS
+# Or: https://cli.github.com/ for other platforms
+
+# Authenticate
+gh auth login
+```
+
+### 5. Docker Desktop
+
+Used in Phase 7 to containerize your app. Install now so it's ready when you need it.
+
+[Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+```bash
+# Verify after installation
+docker --version
+docker compose version
+```
+
+### Quick check — run this to verify everything:
+
+```bash
+echo "Claude Code: $(claude --version 2>/dev/null || echo 'NOT FOUND')"
+echo "Python:      $(python3 --version 2>/dev/null || echo 'NOT FOUND')"
+echo "Node.js:     $(node --version 2>/dev/null || echo 'NOT FOUND')"
+echo "Git:         $(git --version 2>/dev/null || echo 'NOT FOUND')"
+echo "GitHub CLI:  $(gh --version 2>/dev/null | head -1 || echo 'NOT FOUND')"
+echo "Docker:      $(docker --version 2>/dev/null || echo 'NOT FOUND')"
+```
+
+All 6 should show version numbers. If any say `NOT FOUND`, install it using the instructions above.
 
 ---
 
@@ -136,6 +228,25 @@ Both Python and JavaScript in one project. You'll see Claude Code work across bo
 
 ---
 
+## Claude Code Features You'll Use
+
+Beyond generating code, you'll learn the workflow features that make Claude Code predictable and efficient:
+
+| Feature | Phase | What You'll Do |
+|---------|-------|---------------|
+| **`/init`** | 0 | Generate a baseline CLAUDE.md, then refine it yourself |
+| **Permission settings** | 0 | Allow dev commands, deny destructive ones and `.env` reads |
+| **Plan Mode** | 1 | Shift+Tab to analyze before coding — read-only brainstorm |
+| **Custom skills** | 1, 3, 6 | Build 3 reusable slash commands from observed patterns |
+| **Git worktrees** | 5 | Full filesystem isolation for parallel Claude instances |
+| **GitHub MCP** | 5 | Project-scoped `.mcp.json` — team gets it automatically |
+| **Lint hook** | 6 | Auto-run linter after every Claude edit — self-correcting |
+| **`/review-diff`** | 6 | Pre-commit review skill that injects live `git diff` |
+
+Each feature is introduced when you need it. No front-loaded setup.
+
+---
+
 ## Repo Structure
 
 ```
@@ -157,9 +268,15 @@ claude-code-project-tutorial/
 │
 ├── templates/                         ← Copy these into your project at Phase 0
 │   ├── CLAUDE.md.starter
+│   ├── settings.json                  ← Permission rules for .claude/settings.json
 │   ├── CHANGELOG.md
 │   ├── REQUIREMENTS.md
 │   └── BUGS.md
+│
+├── skills/                            ← Custom skills built during the tutorial
+│   ├── add-endpoint/SKILL.md          ← Phase 1: scaffold API endpoints
+│   ├── add-component/SKILL.md         ← Phase 3: scaffold React components
+│   └── review-diff/SKILL.md           ← Phase 6: pre-commit diff review
 │
 └── reference/                         ← Completed projects to compare against
     ├── expense-tracker/
@@ -193,12 +310,19 @@ Follow each phase in order. Commit often. Push at the end of each phase. By Phas
 
 Once you've completed all 7 phases, you have a working app and a proven workflow. Natural next steps — all using the same process you just learned:
 
+**Project extensions:**
 - **Add authentication** — JWT tokens, login/signup, protected routes
 - **Switch SQLite to Postgres** — update docker-compose, write migrations
 - **Add CI/CD** — GitHub Actions for tests, linting, Docker builds
 - **Deploy** — Railway, Fly.io, or a VPS
 - **Add real-time features** — WebSockets for live updates
-- **Scale parallel work** — more branches, more agents, bigger features
+
+**Advanced Claude Code features:**
+- **Custom MCP servers** — build one tailored to your project's API or database
+- **Agent teams** — coordinated multi-agent workflows for large codebases
+- **Headless/CI mode** — run Claude in GitHub Actions pipelines
+- **CLAUDE.md imports** — `@path/to/file` for modular instructions in large projects
+- **Custom subagents** — specialized agents for domain-specific tasks
 
 ---
 

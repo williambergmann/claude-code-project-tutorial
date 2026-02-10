@@ -56,9 +56,17 @@ claude-code-project-tutorial/
 │   └── appendix-what-goes-wrong.md  # What happens when you break the principles
 ├── templates/                    # Starter files the user copies into their project
 │   ├── CLAUDE.md.starter         # Minimal Phase 0 version
+│   ├── settings.json             # Permission rules (.claude/settings.json)
 │   ├── CHANGELOG.md              # Format example + a couple entries
 │   ├── REQUIREMENTS.md           # Pre-populated with all features by phase
 │   └── BUGS.md                   # Empty with format shown
+├── skills/                       # Custom skills built during the tutorial
+│   ├── add-endpoint/
+│   │   └── SKILL.md              # Built in Phase 1 — scaffold a new API endpoint
+│   ├── add-component/
+│   │   └── SKILL.md              # Built in Phase 3 — scaffold a React component
+│   └── review-diff/
+│       └── SKILL.md              # Built in Phase 6 — review staged changes
 └── reference/                    # Completed implementations (one per project choice)
     ├── expense-tracker/
     ├── link-shortener/
@@ -126,14 +134,38 @@ This section is written as reasoning, not declarations. It will appear in Phase 
 - Copy starter templates into project: CLAUDE.md, CHANGELOG.md, REQUIREMENTS.md, BUGS.md
 - REQUIREMENTS.md comes pre-populated with all features organized by phase
 
+**Claude Code setup:**
+- Run `claude` in the project, then use `/init` to generate a baseline CLAUDE.md
+- Review what `/init` produces — then replace/merge with the starter template. The point: AI gives you a draft, you make it yours (Principle 9)
+- Set up `.claude/settings.json` with permission rules:
+  ```json
+  {
+    "permissions": {
+      "allow": [
+        "Bash(python -m pytest *)",
+        "Bash(npm run *)",
+        "Bash(git diff *)",
+        "Bash(git status)",
+        "Bash(git log *)"
+      ],
+      "deny": [
+        "Bash(rm -rf *)",
+        "Read(./.env)",
+        "Read(./.env.*)"
+      ]
+    }
+  }
+  ```
+- This reduces permission-click fatigue during the tutorial and teaches security hygiene from the start. Claude cannot read `.env` files — ever.
+
 **Commits:**
 ```
-git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md BUGS.md README.md
-git commit -m "initial commit: project setup with CLAUDE.md and tracking files"
+git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md BUGS.md README.md .claude/settings.json
+git commit -m "initial commit: project setup with CLAUDE.md, tracking files, and permissions"
 git push -u origin main
 ```
 
-**Token cost:** Minimal — this phase is manual setup, not Claude Code prompting.
+**Token cost:** Minimal — this phase is mostly manual setup. The only Claude interaction is `/init`.
 
 ---
 
@@ -143,7 +175,10 @@ git push -u origin main
 
 **What happens:**
 - Open Claude Code CLI in the project directory
-- Claude reads CLAUDE.md automatically
+- **Press Shift+Tab twice** to enter Plan Mode before the first prompt
+- Claude reads CLAUDE.md automatically and can only analyze, not edit — use this to validate your approach
+- **Prompt (in plan mode):** "I need to scaffold a FastAPI backend with SQLite and a React+Vite frontend. Review my CLAUDE.md and propose the project structure, folder layout, and key files before we start."
+- Review the plan. Say "continue" or adjust. **Then exit plan mode (Shift+Tab)** so Claude can write code.
 - **Prompt:** Scaffold the backend — FastAPI project structure, database connection, health endpoint
 - **Review diff:** Check folder structure, naming conventions, import patterns
 - **Commit + push**
@@ -152,11 +187,39 @@ git push -u origin main
 - **Commit + push**
 - **Health check:** Ask Claude to add a `/api/ping` endpoint. Does it match existing patterns in 1 shot? If yes → foundation is solid.
 - Update CHANGELOG.md
-- Build a `/add-endpoint` custom skill in `~/.claude/commands/` based on the pattern established (Principle 9 — skills emerge from actual need)
+
+**Build your first custom skill:**
+
+Now that you've established a backend pattern, create a skill so Claude replicates it consistently. Create `.claude/skills/add-endpoint/SKILL.md`:
+
+```yaml
+---
+name: add-endpoint
+description: Scaffold a new FastAPI endpoint following project conventions
+disable-model-invocation: true
+argument-hint: "[resource-name]"
+allowed-tools: Read, Edit, Write
+---
+
+Create a new FastAPI endpoint for $ARGUMENTS following the existing patterns in the codebase.
+
+Current project structure:
+!`find backend/app -type f -name "*.py" | head -20`
+
+Requirements:
+- Follow the same file organization as existing endpoints
+- Include Pydantic request/response models
+- Add input validation
+- Register the router in the main app
+- Do NOT create tests yet (we handle those separately)
+```
+
+The `!`find ...`` syntax injects live project context before Claude starts — it always sees the current file layout, not a stale snapshot.
 
 **Key teaching moments:**
-- Show the user what a GOOD scaffold looks like vs a messy one
-- Explain why reviewing the first diff carefully is worth 10x more than reviewing the 50th
+- Plan mode first, code second — especially when starting a phase
+- Skills emerge from actual patterns, not premature templates (Principle 9)
+- The first diff is worth 10x more attention than the 50th — these patterns get replicated everywhere
 
 ---
 
@@ -196,9 +259,35 @@ git push -u origin main
 - **Commit + push**
 - **Health check:** Ask Claude to add a "delete" button with confirmation. 1 shot? Clean? Matches patterns?
 
+**Build your second custom skill:**
+
+Same idea as Phase 1, but for the frontend. Create `.claude/skills/add-component/SKILL.md`:
+
+```yaml
+---
+name: add-component
+description: Scaffold a React component following project conventions
+disable-model-invocation: true
+argument-hint: "[ComponentName]"
+allowed-tools: Read, Edit, Write
+---
+
+Create a new React component called $ARGUMENTS following the existing patterns.
+
+Current components:
+!`find frontend/src -type f -name "*.jsx" -o -name "*.tsx" | head -20`
+
+Requirements:
+- Match the file naming and export pattern of existing components
+- Include prop types or TypeScript interfaces if the project uses them
+- Follow the same styling approach (CSS modules, Tailwind, etc.)
+- Place in the appropriate directory based on component type
+```
+
 **Key teaching moments:**
 - Principle 3 in action: because Phase 1's patterns were clean, Claude replicates them consistently without extra instruction
 - Show the "continue" workflow: prompt → review output → "looks good, continue" or "change X first"
+- Two skills now exist — both emerged from need, not premature planning
 
 ---
 
@@ -227,21 +316,58 @@ git push -u origin main
 **Principles demonstrated:** 2 (parallel agents, zero chaos), 10 (process alignment)
 
 **What happens:**
-- Create two branches: `feature/search` and `feature/export`
-- Open two terminal windows (or tmux panes)
-- Terminal 1: checkout `feature/search`, run `claude`
-- Terminal 2: checkout `feature/export`, run `claude`
+
+**Set up git worktrees** (better than plain branches — full filesystem isolation):
+```bash
+# From your project root
+git worktree add ../my-app-search -b feature/search
+git worktree add ../my-app-export -b feature/export
+```
+
+Each worktree is a separate directory with its own files, its own `node_modules`, its own Claude session. No interference.
+
+**Run two Claude instances simultaneously:**
+- Terminal 1: `cd ../my-app-search && claude`
+- Terminal 2: `cd ../my-app-export && claude`
 - Give each a focused, specific prompt for its feature
-- Show how CLAUDE.md provides consistent context to both agents
+- Both agents read the same CLAUDE.md — consistent context without coordination overhead
 - Both agents work simultaneously without stepping on each other
-- Merge both branches into main
-- Resolve any conflicts (guide explains why there should be few if architecture is clean)
+
+**Set up project-scoped MCP for GitHub** (optional but demonstrates team workflow):
+
+Create `.mcp.json` in the project root:
+```json
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}
+```
+
+This lets Claude create PRs, comment on issues, and interact with GitHub directly from the CLI. Committed to version control = every team member gets it automatically (Principle 10).
+
+**Merge and clean up:**
+```bash
+cd /path/to/my-app   # back to main worktree
+git merge feature/search
+git merge feature/export
+git worktree remove ../my-app-search
+git worktree remove ../my-app-export
+```
+
+Resolve any conflicts (guide explains why there should be few if architecture is clean).
+
 - **Commit + push**
+- Optionally use Claude with GitHub MCP to create a PR summarizing both features
 
 **Key teaching moments:**
 - This phase only works because of Phase 0-1 discipline — that's the entire point
-- Show that CLAUDE.md is what keeps parallel agents aligned
-- Demonstrate that independent features on independent branches = clean merges
+- CLAUDE.md is what keeps parallel agents aligned — both read it, both follow the same conventions
+- Git worktrees > plain branches for parallel AI work (full isolation, no stashing, no switching)
+- Project-scoped `.mcp.json` = team alignment baked into the repo (Principle 10)
 
 ---
 
@@ -252,16 +378,82 @@ git push -u origin main
 **What happens:**
 - **Prompt:** Add tests for core API endpoints
 - **Commit**
-- **Prompt:** "Review this codebase for security issues"
+- **Prompt:** "Review this codebase for security issues — check specifically for SQL injection, XSS, open redirects, CORS misconfiguration, and missing input validation"
 - **Review:** Did Claude over-engineer? Add unnecessary abstractions? Suggest LLM calls for simple calculations? (Principle 13)
 - **Commit**
 - **Diff review exercise:** The guide presents a realistic diff with a subtle logic bug. User must spot it before continuing.
 - **Commit + push**
 - Update CHANGELOG.md
 
+**Build your third custom skill — `/review-diff`:**
+
+This is the most powerful skill in the tutorial. Create `.claude/skills/review-diff/SKILL.md`:
+
+```yaml
+---
+name: review-diff
+description: Review staged git changes for bugs, security issues, and convention violations
+disable-model-invocation: true
+context: fork
+allowed-tools: Read, Grep, Glob
+---
+
+Review the following staged changes for issues:
+
+!`git diff --staged`
+
+Check for:
+1. Security issues (SQL injection, XSS, open redirects, hardcoded secrets)
+2. Logic bugs (wrong variable names, off-by-one, timezone mismatches)
+3. Convention violations (does it match existing patterns in the codebase?)
+4. Missing validation or error handling at system boundaries
+5. Unnecessary complexity or over-engineering
+
+Do NOT suggest style changes or add comments to working code.
+Report only real issues. If everything looks clean, say so.
+```
+
+Key details:
+- `context: fork` runs this in a subagent — it doesn't pollute your main conversation context
+- `!`git diff --staged`` injects the actual diff before Claude sees it
+- `allowed-tools: Read, Grep, Glob` lets Claude check the surrounding code for context — read-only, no edits
+- Run it with `/review-diff` before every commit in critical phases
+
+**Set up a PostToolUse lint hook:**
+
+Add to `.claude/settings.json`:
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/lint.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Create `.claude/hooks/lint.sh`:
+```bash
+#!/bin/bash
+cd backend && python -m ruff check . --quiet 2>/dev/null
+cd ../frontend && npx eslint . --quiet 2>/dev/null
+```
+
+Now every time Claude edits a file, the linter runs automatically. Claude sees the lint output and can self-correct before you even review. One hook, set-and-forget.
+
 **Key teaching moments:**
 - Principle 13: if Claude suggests calling an API or LLM for something a simple function handles, push back
-- Security review prompts should be explicit: "check for SQL injection, XSS, open redirects, CORS misconfiguration" — not just "make it secure"
+- The `/review-diff` skill becomes a permanent part of your workflow beyond this tutorial
+- One hook is enough to demonstrate the concept — don't over-build (Principle 7)
 - Tests should cover the critical paths, not aim for 100% coverage in a tutorial
 
 ---
@@ -285,6 +477,87 @@ git push -u origin main
 - What would you change about CLAUDE.md if starting over? (Principle 8)
 - Which prompts could be 1-shot but weren't? Why? (Principle 4)
 - Where did Claude surprise you — positively or negatively?
+
+---
+
+## Claude Code Workflow Features Used in This Tutorial
+
+This tutorial doesn't just use Claude Code to generate code — it teaches the workflow features that make the agent predictable, efficient, and safe. Each feature is introduced when it's needed, not all at once.
+
+### Features by Phase
+
+| Phase | Feature Introduced | Why Here |
+|-------|-------------------|----------|
+| 0 | `/init`, permission settings (`.claude/settings.json`) | Establish guardrails before any code is generated |
+| 1 | Plan Mode (Shift+Tab), custom skill `/add-endpoint` | Plan before coding; build a skill from observed patterns |
+| 3 | Custom skill `/add-component` | Second skill, frontend side — skills emerge from need |
+| 5 | Git worktrees, project-scoped `.mcp.json` (GitHub MCP) | Full isolation for parallel work; team-shareable MCP config |
+| 6 | Custom skill `/review-diff`, PostToolUse lint hook | Pre-commit review skill; auto-lint on every edit |
+| 7 | Retrospective on all features | What worked, what you'd change |
+
+### Custom Skills (3 total)
+
+Skills are folders in `.claude/skills/` with a `SKILL.md` file. They replace the older `~/.claude/commands/` system.
+
+| Skill | Phase | What It Does | Key Feature |
+|-------|-------|-------------|-------------|
+| `/add-endpoint` | 1 | Scaffolds a FastAPI endpoint matching project conventions | `!`find`` injects live file tree; `allowed-tools` auto-approves Read/Edit/Write |
+| `/add-component` | 3 | Scaffolds a React component matching project conventions | Same pattern, frontend side |
+| `/review-diff` | 6 | Reviews `git diff --staged` for bugs and security issues | `context: fork` runs in subagent; read-only tools only |
+
+**Design principles for skills in this tutorial:**
+- Each one emerges from a repeated action during the build (Principle 9)
+- `disable-model-invocation: true` on all three — only the user triggers them
+- `!`command`` syntax injects live project context — skills stay accurate as the project grows
+- Skills are committed to `.claude/skills/` in the project repo — team members get them automatically
+
+### MCP (Model Context Protocol)
+
+One MCP server is introduced: **GitHub**, via project-scoped `.mcp.json` in Phase 5.
+
+**Why only one:** Principle 7 (complex setups suck). One well-chosen MCP server demonstrates the concept. Users can add more after the tutorial.
+
+**Why GitHub:** It's the most universally useful. Create PRs from Claude, comment on issues, search code across repos. And the config file is committed to version control — team alignment for free (Principle 10).
+
+**Why project-scoped:** `.mcp.json` at the project root means every contributor gets the same MCP configuration automatically. No per-user setup. No "it works on my machine."
+
+### Hooks
+
+One hook is introduced: **PostToolUse lint check** in Phase 6.
+
+**What it does:** Every time Claude edits or writes a file, the linter runs automatically. Claude sees lint errors in real time and can self-correct before you review.
+
+**Why only one:** Same reasoning as MCP — demonstrate the concept cleanly. The hook system supports `PreToolUse` (block dangerous commands), `Stop` (validate task completion), `UserPromptSubmit` (prompt validation), and more. But one practical example teaches more than a catalog.
+
+### Permission Settings
+
+Set up in Phase 0 via `.claude/settings.json`:
+- **Allow:** Common dev commands (pytest, npm run, git diff/status/log) — reduces permission-click fatigue
+- **Deny:** Destructive commands (rm -rf) and sensitive files (.env) — security from minute one
+
+This is the simplest feature but arguably the most impactful for daily workflow. Less clicking = more flow state.
+
+### Plan Mode
+
+Used at the start of Phase 1 (and recommended at the start of every phase):
+- **Shift+Tab twice** to enter plan mode
+- Claude can analyze the codebase but cannot edit anything
+- Review the plan, iterate, then exit plan mode to implement
+- Think of it as a "read-only brainstorm" before writing code
+
+### What's NOT in This Tutorial (and Why)
+
+| Feature | Why It's Excluded |
+|---------|------------------|
+| Custom MCP servers | Building one is too complex for a ~65 min tutorial |
+| Agent teams | Overkill — git worktrees achieve the same parallel work goal more simply |
+| Headless/CI mode | Out of scope (no CI pipeline in this tutorial) |
+| Multiple hook types | One command hook demonstrates the concept; prompt/agent hooks are advanced |
+| CLAUDE.md imports (`@path`) | Principle 7 — one CLAUDE.md is enough for this project |
+| Custom subagents | Advanced topic better suited for post-tutorial exploration |
+| Extended thinking toggle | Nice to know, not workflow-critical for this tutorial |
+
+These are all mentioned in the "What's Next" section so users know they exist.
 
 ---
 
@@ -358,6 +631,15 @@ After completing all 7 phases, users have a working full-stack app in Docker and
 - **Scale the parallel workflow:** More branches, more agents, larger features
 
 Each of these follows the same process: update REQUIREMENTS.md, update CLAUDE.md, prompt Claude, review diff, commit, push.
+
+**Claude Code features to explore after the tutorial:**
+- **Custom MCP servers** — build one tailored to your project's API or database
+- **Agent teams** — coordinated multi-agent workflows for large codebases
+- **Headless/CI mode** — run Claude in GitHub Actions or other CI pipelines
+- **Prompt and agent hooks** — beyond command hooks, validate prompts or run multi-turn agents on events
+- **CLAUDE.md imports** — `@path/to/file` syntax for modular instructions in large projects
+- **Custom subagents** — specialized agents in `.claude/agents/` for domain-specific tasks
+- **Extended thinking** — Option+T to toggle deeper reasoning for complex problems
 
 ---
 
