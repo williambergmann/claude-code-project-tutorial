@@ -51,8 +51,10 @@ claude-code-project-tutorial/
 │   ├── phase-3-frontend.md       # Pages, components, API client
 │   ├── phase-4-integration.md    # Connect FE↔BE, CORS, end-to-end
 │   ├── phase-5-parallel.md       # Two Claude instances, branches, merge
-│   ├── phase-6-hardening.md      # Tests, security audit, diff review exercise
-│   ├── phase-7-docker.md         # Containerize, docker-compose up, done
+│   ├── phase-6-testing.md        # Backend tests, frontend tests, coverage
+│   ├── phase-7-hardening.md      # Security audit, /review-diff skill, lint hook
+│   ├── phase-8-cicd.md           # GitHub Actions, branch protection
+│   ├── phase-9-docker.md         # Containerize, docker-compose up, done
 │   └── appendix-what-goes-wrong.md  # What happens when you break the principles
 ├── templates/                    # Starter files the user copies into their project
 │   ├── CLAUDE.md.starter         # Minimal Phase 0 version
@@ -66,7 +68,7 @@ claude-code-project-tutorial/
 │   ├── add-component/
 │   │   └── SKILL.md              # Built in Phase 3 — scaffold a React component
 │   └── review-diff/
-│       └── SKILL.md              # Built in Phase 6 — review staged changes
+│       └── SKILL.md              # Built in Phase 7 — review staged changes
 └── reference/                    # Completed implementations (one per project choice)
     ├── expense-tracker/
     ├── link-shortener/
@@ -104,7 +106,7 @@ This section is written as reasoning, not declarations. It will appear in Phase 
 - **Python over Node for backend:** We use JS on the frontend — showing both languages demonstrates Claude Code works across stacks. Python's type hints + FastAPI's Pydantic make Claude's generated code more predictable and reviewable.
 - **FastAPI over Flask:** Auto-generated Swagger docs at `/docs` give instant API verification without Postman or curl. Async support. Modern Python patterns Claude knows well.
 - **FastAPI over Express:** We want both languages in the tutorial. If we used Express, the whole project would be JS and miss the point.
-- **SQLite over Postgres for development:** Zero infrastructure. One file. No Docker dependency during development. The Docker phase (Phase 7) shows upgrading to Postgres as a production conversation.
+- **SQLite over Postgres for development:** Zero infrastructure. One file. No Docker dependency during development. The Docker phase (Phase 9) shows upgrading to Postgres as a production conversation.
 
 ### Frontend: React + Vite
 
@@ -127,7 +129,7 @@ This section is written as reasoning, not declarations. It will appear in Phase 
 
 **What happens:**
 - Prerequisites checklist: Claude Code CLI, Python 3.11+, Node 18+, Git, GitHub account
-- Link to download [Docker Desktop](https://www.docker.com/products/docker-desktop/) — install now, use in Phase 7
+- Link to download [Docker Desktop](https://www.docker.com/products/docker-desktop/) — install now, use in Phase 9
 - Choose project from the 3 options (or bring your own)
 - Read through tech stack reasoning
 - Create GitHub repo, clone locally
@@ -158,9 +160,16 @@ This section is written as reasoning, not declarations. It will appear in Phase 
   ```
 - This reduces permission-click fatigue during the tutorial and teaches security hygiene from the start. Claude cannot read `.env` files — ever.
 
+**Environment config:**
+- Create `.env.example` with dummy values for any secrets the project will need (e.g., `DATABASE_URL=sqlite:///./app.db`)
+- Create `.env` from the example: `cp .env.example .env`
+- Add `.env` to `.gitignore` — secrets never get committed
+- Install `python-dotenv` in requirements — the app loads config from `.env`
+- This ties directly to the permission deny rules: Claude can't read `.env`, and now there's a reason
+
 **Commits:**
 ```
-git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md BUGS.md README.md .claude/settings.json
+git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md BUGS.md README.md .claude/settings.json .env.example .gitignore
 git commit -m "initial commit: project setup with CLAUDE.md, tracking files, and permissions"
 git push -u origin main
 ```
@@ -239,9 +248,19 @@ The `!`find ...`` syntax injects live project context before Claude starts — i
 - Update CLAUDE.md with backend conventions that emerged
 - Update REQUIREMENTS.md — check off completed features
 
+**Database migrations (Alembic):**
+- After models are created, set up Alembic for schema migrations
+- **Prompt:** "Set up Alembic for database migrations. Create the initial migration from the current models."
+- Generate the initial migration: `alembic revision --autogenerate -m "initial schema"`
+- Run it: `alembic upgrade head`
+- Then demonstrate a schema change: add a `notes` field to the main resource
+- Generate a new migration and apply it
+- This teaches the real-world workflow: models change → migration generated → migration applied (P6)
+
 **Key teaching moments:**
 - The planted diff review: guide points out a realistic mistake Claude commonly makes (date field naming, missing validation, overly permissive defaults)
 - Show how updating CLAUDE.md prevents the same mistake in future prompts
+- Alembic migrations show that schema decisions (P6) have consequences — you can't just change a model and hope
 
 ---
 
@@ -371,19 +390,48 @@ Resolve any conflicts (guide explains why there should be few if architecture is
 
 ---
 
-### Phase 6: Hardening (~5 min)
+### Phase 6: Testing (~10 min)
+
+**Principles demonstrated:** 11 (not optimized by default), 4 (1-shot test)
+
+Test generation is AI's sweet spot — boring but necessary work that Claude does well. This phase covers both backend and frontend testing.
+
+**What happens:**
+
+**Backend tests (pytest):**
+- **Prompt:** Create pytest tests for all CRUD endpoints on the main resource. Use FastAPI's TestClient with an in-memory SQLite database. Test success cases and error cases (404, 422).
+- **Review:** Are tests independent? Do they use a test database? Do assertions check response body, not just status codes?
+- **Commit**
+
+**Frontend tests (Vitest + React Testing Library):**
+- **Prompt:** Set up Vitest and React Testing Library. Write tests for the main list page component and the form component. Test rendering, user interactions (click, type, submit), and API error states.
+- **Review:** Are tests testing behavior (what the user sees) not implementation details (internal state)?
+- **Commit**
+
+**Test coverage:**
+- Run `pytest --cov` and `npx vitest --coverage` to see coverage
+- Ask Claude to fill gaps on critical paths — not aiming for 100%, just covering the paths that matter
+- **Commit + push**
+
+**Key teaching moments:**
+- AI-generated tests save massive time, but you still need to verify they test the right things
+- Frontend tests should test behavior (clicks, renders) not implementation (state, refs)
+- Coverage is a guide, not a goal — 80% on critical paths beats 100% on boilerplate
+
+---
+
+### Phase 7: Hardening (~5 min)
 
 **Principles demonstrated:** 11 (not optimized by default), 13 (don't use LLM for 1+1), 12 (check git diff)
 
 **What happens:**
-- **Prompt:** Add tests for core API endpoints
-- **Commit**
 - **Prompt:** "Review this codebase for security issues — check specifically for SQL injection, XSS, open redirects, CORS misconfiguration, and missing input validation"
 - **Review:** Did Claude over-engineer? Add unnecessary abstractions? Suggest LLM calls for simple calculations? (Principle 13)
 - **Commit**
+- **Prompt:** "Audit the frontend for basic accessibility issues — missing alt text, form labels, keyboard navigation, color contrast"
+- **Commit**
 - **Diff review exercise:** The guide presents a realistic diff with a subtle logic bug. User must spot it before continuing.
 - **Commit + push**
-- Update CHANGELOG.md
 
 **Build your third custom skill — `/review-diff`:**
 
@@ -417,7 +465,6 @@ Key details:
 - `context: fork` runs this in a subagent — it doesn't pollute your main conversation context
 - `!`git diff --staged`` injects the actual diff before Claude sees it
 - `allowed-tools: Read, Grep, Glob` lets Claude check the surrounding code for context — read-only, no edits
-- Run it with `/review-diff` before every commit in critical phases
 
 **Set up a PostToolUse lint hook:**
 
@@ -448,17 +495,39 @@ cd backend && python -m ruff check . --quiet 2>/dev/null
 cd ../frontend && npx eslint . --quiet 2>/dev/null
 ```
 
-Now every time Claude edits a file, the linter runs automatically. Claude sees the lint output and can self-correct before you even review. One hook, set-and-forget.
-
 **Key teaching moments:**
 - Principle 13: if Claude suggests calling an API or LLM for something a simple function handles, push back
 - The `/review-diff` skill becomes a permanent part of your workflow beyond this tutorial
 - One hook is enough to demonstrate the concept — don't over-build (Principle 7)
-- Tests should cover the critical paths, not aim for 100% coverage in a tutorial
+- Accessibility is an underappreciated AI use case — Claude catches issues humans miss
 
 ---
 
-### Phase 7: Docker & Ship (~5 min)
+### Phase 8: CI/CD (~5 min)
+
+**Principles demonstrated:** 10 (process alignment in teams), 2 (parallel work is safer with CI)
+
+CI/CD is one of AI's highest-value use cases. Writing GitHub Actions YAML is tedious, error-prone, and Claude nails it.
+
+**What happens:**
+- **Prompt:** "Create a GitHub Actions workflow at `.github/workflows/ci.yml` that runs on every push and pull request to main. It should: install Python and Node dependencies, run backend tests with pytest, run frontend tests with vitest, run backend linting with ruff, run frontend linting with eslint. Use a matrix strategy for Python 3.11 and Node 18."
+- **Review:** Is the YAML valid? Are dependencies cached? Are secrets handled correctly?
+- **Commit + push** — watch the workflow run on GitHub
+
+**Branch protection:**
+- **Prompt:** "Show me the gh CLI commands to set up branch protection on main: require CI to pass before merging, require at least 1 review."
+- Run the commands (or set up manually in GitHub settings)
+- This means parallel work from Phase 5 now has a safety net — CI catches broken merges
+
+**Key teaching moments:**
+- CI YAML is where Claude saves the most tedious time — one prompt generates a complete workflow
+- Branch protection + CI = parallel agents can't break main (P2 + P10)
+- Show how CI catches issues that local testing might miss (different OS, clean install)
+- Mention headless Claude Code in CI as a "What's Next" teaser
+
+---
+
+### Phase 9: Docker & Ship (~5 min)
 
 **Principles demonstrated:** 8 (agent experience is a priority)
 
@@ -480,6 +549,22 @@ Now every time Claude edits a file, the linter runs automatically. Claude sees t
 
 ---
 
+## Areas Ranked by Value for Claude Code
+
+What AI does best for this tutorial, ranked by value-to-effort ratio:
+
+| Rank | Area | Value | Why |
+|------|------|-------|-----|
+| 1 | **Test generation** | Very High | Boring but necessary. Claude writes good tests fast. Backend + frontend. |
+| 2 | **CI/CD YAML** | Very High | GitHub Actions YAML is tedious and error-prone. Claude nails it in one shot. |
+| 3 | **Docker config** | High | Dockerfiles + compose are boilerplate-heavy. One prompt = working setup. |
+| 4 | **Security audit** | High | Claude checks for OWASP top 10 issues you'd miss. Cheap to run. |
+| 5 | **Accessibility audit** | Medium | Catches missing alt text, labels, keyboard nav. Underappreciated use case. |
+| 6 | **Database migrations** | Medium | Alembic setup is fiddly. Claude handles the boilerplate, you own the schema. |
+| 7 | **Environment config** | Medium | .env patterns are simple but easy to forget. Good early habit. |
+
+---
+
 ## Claude Code Workflow Features Used in This Tutorial
 
 This tutorial doesn't just use Claude Code to generate code — it teaches the workflow features that make the agent predictable, efficient, and safe. Each feature is introduced when it's needed, not all at once.
@@ -492,8 +577,8 @@ This tutorial doesn't just use Claude Code to generate code — it teaches the w
 | 1 | Plan Mode (Shift+Tab), custom skill `/add-endpoint` | Plan before coding; build a skill from observed patterns |
 | 3 | Custom skill `/add-component` | Second skill, frontend side — skills emerge from need |
 | 5 | Git worktrees, project-scoped `.mcp.json` (GitHub MCP) | Full isolation for parallel work; team-shareable MCP config |
-| 6 | Custom skill `/review-diff`, PostToolUse lint hook | Pre-commit review skill; auto-lint on every edit |
-| 7 | Retrospective on all features | What worked, what you'd change |
+| 7 | Custom skill `/review-diff`, PostToolUse lint hook | Pre-commit review skill; auto-lint on every edit |
+| 9 | Retrospective on all features | What worked, what you'd change |
 
 ### Custom Skills (3 total)
 
@@ -503,7 +588,7 @@ Skills are folders in `.claude/skills/` with a `SKILL.md` file. They replace the
 |-------|-------|-------------|-------------|
 | `/add-endpoint` | 1 | Scaffolds a FastAPI endpoint matching project conventions | `!`find`` injects live file tree; `allowed-tools` auto-approves Read/Edit/Write |
 | `/add-component` | 3 | Scaffolds a React component matching project conventions | Same pattern, frontend side |
-| `/review-diff` | 6 | Reviews `git diff --staged` for bugs and security issues | `context: fork` runs in subagent; read-only tools only |
+| `/review-diff` | 7 | Reviews `git diff --staged` for bugs and security issues | `context: fork` runs in subagent; read-only tools only |
 
 **Design principles for skills in this tutorial:**
 - Each one emerges from a repeated action during the build (Principle 9)
@@ -523,7 +608,7 @@ One MCP server is introduced: **GitHub**, via project-scoped `.mcp.json` in Phas
 
 ### Hooks
 
-One hook is introduced: **PostToolUse lint check** in Phase 6.
+One hook is introduced: **PostToolUse lint check** in Phase 7.
 
 **What it does:** Every time Claude edits or writes a file, the linter runs automatically. Claude sees lint errors in real time and can self-correct before you review.
 
@@ -549,9 +634,9 @@ Used at the start of Phase 1 (and recommended at the start of every phase):
 
 | Feature | Why It's Excluded |
 |---------|------------------|
-| Custom MCP servers | Building one is too complex for a ~65 min tutorial |
+| Custom MCP servers | Building one is too complex for a ~75 min tutorial |
 | Agent teams | Overkill — git worktrees achieve the same parallel work goal more simply |
-| Headless/CI mode | Out of scope (no CI pipeline in this tutorial) |
+| Headless/CI mode | We set up CI in Phase 8, but headless Claude in CI is advanced — mentioned in What's Next |
 | Multiple hook types | One command hook demonstrates the concept; prompt/agent hooks are advanced |
 | CLAUDE.md imports (`@path`) | Principle 7 — one CLAUDE.md is enough for this project |
 | Custom subagents | Advanced topic better suited for post-tutorial exploration |
@@ -590,13 +675,13 @@ Every step in every phase doc fits roughly one screen. Each step ends with a che
 
 ### CLAUDE.md Evolution
 
-The guide shows CLAUDE.md at the end of each phase with additions highlighted. It starts minimal in Phase 0 and grows organically as conventions emerge. By Phase 7 it's a mature, useful document — not because it was templated, but because it was built through experience (Principle 8).
+The guide shows CLAUDE.md at the end of each phase with additions highlighted. It starts minimal in Phase 0 and grows organically as conventions emerge. By Phase 9 it's a mature, useful document — not because it was templated, but because it was built through experience (Principle 8).
 
 ---
 
 ## Token Usage Guidance
 
-This tutorial is designed to fit within one $20 Claude Code Pro session (~45-60 min of active use).
+This tutorial is designed to fit within one $20 Claude Code Pro session (~60-75 min of active use).
 
 **How to stay within budget:**
 - `/clear` between phases — CLAUDE.md provides continuity
@@ -625,11 +710,10 @@ The core project context file. Starts as a starter template in Phase 0. Evolves 
 
 ## What's Next (End of Tutorial)
 
-After completing all 7 phases, users have a working full-stack app in Docker and a proven Claude Code workflow. Natural next steps:
+After completing all 10 phases, users have a working full-stack app in Docker with tests, CI/CD, and a proven Claude Code workflow. Natural next steps:
 
 - **Add authentication:** JWT tokens, login/signup flow, protected routes
-- **Switch SQLite → Postgres:** Update docker-compose, migration scripts
-- **Add CI/CD:** GitHub Actions for tests, linting, Docker build
+- **Switch SQLite → Postgres:** Update docker-compose, add production migration scripts
 - **Deploy:** Railway, Fly.io, or a VPS — using Claude Code to scaffold the deployment config
 - **Add real-time features:** WebSockets for live updates (especially relevant for Task Board)
 - **Scale the parallel workflow:** More branches, more agents, larger features
@@ -639,7 +723,7 @@ Each of these follows the same process: update REQUIREMENTS.md, update CLAUDE.md
 **Claude Code features to explore after the tutorial:**
 - **Custom MCP servers** — build one tailored to your project's API or database
 - **Agent teams** — coordinated multi-agent workflows for large codebases
-- **Headless/CI mode** — run Claude in GitHub Actions or other CI pipelines
+- **Headless/CI mode** — run Claude Code headless in GitHub Actions for automated PR review
 - **Prompt and agent hooks** — beyond command hooks, validate prompts or run multi-turn agents on events
 - **CLAUDE.md imports** — `@path/to/file` syntax for modular instructions in large projects
 - **Custom subagents** — specialized agents in `.claude/agents/` for domain-specific tasks

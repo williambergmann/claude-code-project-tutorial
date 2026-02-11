@@ -28,16 +28,18 @@ Or bring your own idea — any CRUD app with a frontend and backend works.
 This isn't about learning to code. It's about learning to **work with an AI coding agent effectively**.
 
 ```
-Phase 0  Setup & Decisions       ~5 min     /init, permissions, CLAUDE.md, project tracking
+Phase 0  Setup & Decisions       ~5 min     /init, permissions, CLAUDE.md, .env config
 Phase 1  Foundation              ~10 min    Plan mode, scaffold both apps, first skill
-Phase 2  Backend Core            ~10 min    Models, API, diff review discipline
+Phase 2  Backend Core            ~10 min    Models, Alembic migrations, API, diff review
 Phase 3  Frontend Core           ~10 min    Components, second skill, "continue" workflow
 Phase 4  Integration             ~10 min    Connect FE↔BE, catch the planted bug
 Phase 5  Parallel Work           ~10 min    Git worktrees, GitHub MCP, two agents
-Phase 6  Hardening               ~5 min     /review-diff skill, lint hook, security audit
-Phase 7  Docker & Ship           ~5 min     Containerize, launch, retrospective
+Phase 6  Testing                 ~10 min    pytest, Vitest, React Testing Library, coverage
+Phase 7  Hardening               ~5 min     Security audit, /review-diff skill, lint hook
+Phase 8  CI/CD                   ~5 min     GitHub Actions workflow, branch protection
+Phase 9  Docker & Ship           ~5 min     Containerize, launch, retrospective
                                  ─────
-                                 ~65 min total
+                                 ~75 min total
 ```
 
 By the end, you'll have:
@@ -65,11 +67,11 @@ Every phase maps back to these. They're not theory — they're the difference be
 | 6 | AI didn't speed up all steps equally | Phase 0 tech stack decisions |
 | 7 | Complex agent setups suck | One CLAUDE.md, not a pile of .md files |
 | 8 | Agent experience is a priority | CLAUDE.md evolves every phase |
-| 9 | Own your prompts, own your workflow | Custom skills in Phase 1, 3, 6 |
-| 10 | Process alignment is critical in teams | Phase 5 parallel work |
-| 11 | AI code is not optimized by default | Phase 2, 4, 6 reviews |
-| 12 | Check git diff for critical logic | Phase 2, 4, 6 diff exercises |
-| 13 | You don't need an LLM to calculate 1+1 | Phase 6 hardening |
+| 9 | Own your prompts, own your workflow | Custom skills in Phase 1, 3, 7 |
+| 10 | Process alignment is critical in teams | Phase 5 parallel work, Phase 8 CI |
+| 11 | AI code is not optimized by default | Phase 2, 4, 6, 7 reviews |
+| 12 | Check git diff for critical logic | Phase 2, 4, 7 diff exercises |
+| 13 | You don't need an LLM to calculate 1+1 | Phase 7 hardening |
 
 ---
 
@@ -151,7 +153,7 @@ gh auth login
 
 ### 5. Docker Desktop
 
-Used in Phase 7 to containerize your app. Install now so it's ready when you need it.
+Used in Phase 9 to containerize your app. Install now so it's ready when you need it.
 
 [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
@@ -189,7 +191,7 @@ docs/phase-0-setup.md        →    You create: my-expense-tracker/
 docs/phase-1-foundation.md   →    You scaffold backend + frontend
 docs/phase-2-backend.md      →    You build models + API
 ...                                ...
-docs/phase-7-docker.md       →    You run: docker compose up
+docs/phase-9-docker.md       →    You run: docker compose up
 ```
 
 ### One step at a time — no walls of text
@@ -233,7 +235,7 @@ This tutorial is designed for a single $20 Pro session:
 |-------|--------|-----|
 | **Backend** | Python + FastAPI | Type hints + Pydantic = predictable AI output. Auto-generated `/docs` for instant verification. |
 | **Frontend** | React + Vite | Largest community, most Claude training data. Vite over Next.js — we don't need SSR, and clear FE/BE separation matters for learning. |
-| **Database** | SQLite (dev) → Postgres (Docker) | Zero setup for development. Postgres upgrade happens naturally in Phase 7. |
+| **Database** | SQLite (dev) → Postgres (Docker) | Zero setup for development. Postgres upgrade happens naturally in Phase 9. |
 | **Container** | Docker Compose | One command to run everything. Added last, not first — matches real workflow. |
 
 Both Python and JavaScript in one project. You'll see Claude Code work across both.
@@ -249,11 +251,11 @@ Beyond generating code, you'll learn the workflow features that make Claude Code
 | **`/init`** | 0 | Generate a baseline CLAUDE.md, then refine it yourself |
 | **Permission settings** | 0 | Allow dev commands, deny destructive ones and `.env` reads |
 | **Plan Mode** | 1 | Shift+Tab to analyze before coding — read-only brainstorm |
-| **Custom skills** | 1, 3, 6 | Build 3 reusable slash commands from observed patterns |
+| **Custom skills** | 1, 3, 7 | Build 3 reusable slash commands from observed patterns |
 | **Git worktrees** | 5 | Full filesystem isolation for parallel Claude instances |
 | **GitHub MCP** | 5 | Project-scoped `.mcp.json` — team gets it automatically |
-| **Lint hook** | 6 | Auto-run linter after every Claude edit — self-correcting |
-| **`/review-diff`** | 6 | Pre-commit review skill that injects live `git diff` |
+| **Lint hook** | 7 | Auto-run linter after every Claude edit — self-correcting |
+| **`/review-diff`** | 7 | Pre-commit review skill that injects live `git diff` |
 
 Each feature is introduced when you need it. No front-loaded setup.
 
@@ -274,8 +276,10 @@ claude-code-project-tutorial/
 │   ├── phase-3-frontend.md
 │   ├── phase-4-integration.md
 │   ├── phase-5-parallel.md
-│   ├── phase-6-hardening.md
-│   ├── phase-7-docker.md
+│   ├── phase-6-testing.md
+│   ├── phase-7-hardening.md
+│   ├── phase-8-cicd.md
+│   ├── phase-9-docker.md
 │   └── appendix-what-goes-wrong.md    ← What happens when you break the rules
 │
 ├── templates/                         ← Copy these into your project at Phase 0
@@ -288,7 +292,7 @@ claude-code-project-tutorial/
 ├── skills/                            ← Custom skills built during the tutorial
 │   ├── add-endpoint/SKILL.md          ← Phase 1: scaffold API endpoints
 │   ├── add-component/SKILL.md         ← Phase 3: scaffold React components
-│   └── review-diff/SKILL.md           ← Phase 6: pre-commit diff review
+│   └── review-diff/SKILL.md           ← Phase 7: pre-commit diff review
 │
 └── reference/                         ← Completed projects to compare against
     ├── expense-tracker/
@@ -296,7 +300,7 @@ claude-code-project-tutorial/
     └── task-board/
 ```
 
-Reference implementations are also available on the `reference-history` branch with tagged commits matching each phase (`v0-setup` through `v7-docker`).
+Reference implementations are also available on the `reference-history` branch with tagged commits matching each phase (`v0-setup` through `v9-docker`).
 
 ---
 
@@ -314,25 +318,24 @@ Start with [docs/phase-0-setup.md](docs/phase-0-setup.md) — it walks you throu
 
 **3. Build**
 
-Follow each phase in order. Commit often. Push at the end of each phase. By Phase 7 you'll have a working app in Docker.
+Follow each phase in order. Commit often. Push at the end of each phase. By Phase 9 you'll have a working app in Docker with tests and CI.
 
 ---
 
 ## What's Next (After the Tutorial)
 
-Once you've completed all 7 phases, you have a working app and a proven workflow. Natural next steps — all using the same process you just learned:
+Once you've completed all 10 phases, you have a working app with tests, CI/CD, and Docker — plus a proven workflow. Natural next steps:
 
 **Project extensions:**
 - **Add authentication** — JWT tokens, login/signup, protected routes
-- **Switch SQLite to Postgres** — update docker-compose, write migrations
-- **Add CI/CD** — GitHub Actions for tests, linting, Docker builds
+- **Switch SQLite to Postgres** — update docker-compose, production migrations
 - **Deploy** — Railway, Fly.io, or a VPS
 - **Add real-time features** — WebSockets for live updates
 
 **Advanced Claude Code features:**
 - **Custom MCP servers** — build one tailored to your project's API or database
 - **Agent teams** — coordinated multi-agent workflows for large codebases
-- **Headless/CI mode** — run Claude in GitHub Actions pipelines
+- **Headless/CI mode** — run Claude Code headless in GitHub Actions for automated PR review
 - **CLAUDE.md imports** — `@path/to/file` for modular instructions in large projects
 - **Custom subagents** — specialized agents for domain-specific tasks
 

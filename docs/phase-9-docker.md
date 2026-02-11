@@ -1,4 +1,4 @@
-# Phase 7: Docker & Ship
+# Phase 9: Docker & Ship
 
 **Time:** ~5 minutes | **Tokens:** Low
 
@@ -9,7 +9,7 @@
 
 ---
 
-## Step 7.1: Create the Backend Dockerfile
+## Step 9.1: Create the Backend Dockerfile
 
 ```
 Create a Dockerfile for the FastAPI backend at backend/Dockerfile.
@@ -34,7 +34,7 @@ git commit -m "feat: add backend Dockerfile"
 
 ---
 
-## Step 7.2: Create the Frontend Dockerfile
+## Step 9.2: Create the Frontend Dockerfile
 
 ```
 Create a Dockerfile for the React frontend at frontend/Dockerfile.
@@ -57,7 +57,7 @@ git commit -m "feat: add frontend Dockerfile with nginx"
 
 ---
 
-## Step 7.3: Create docker-compose.yml
+## Step 9.3: Create docker-compose.yml
 
 ```
 Create a docker-compose.yml at the project root that:
@@ -81,7 +81,7 @@ git commit -m "feat: add docker-compose.yml for full stack"
 
 ---
 
-## Step 7.4: Launch It
+## Step 9.4: Launch It
 
 Make sure Docker Desktop is running, then:
 
@@ -111,7 +111,7 @@ Stop with `Ctrl+C` when you're done testing.
 
 ---
 
-## Step 7.5: Final Commit, Tag, and Push
+## Step 9.5: Final Commit, Tag, and Push
 
 ```bash
 # Update CLAUDE.md with Docker commands
@@ -120,7 +120,7 @@ Stop with `Ctrl+C` when you're done testing.
 # docker compose down
 
 git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md
-git commit -m "docs: final updates for Phase 7 — Docker and ship"
+git commit -m "docs: final updates for Phase 9 — Docker and ship"
 
 git push
 
@@ -136,7 +136,7 @@ git push origin v1.0
 
 ---
 
-## Step 7.6: Retrospective
+## Step 9.6: Retrospective
 
 You're done building. Take 2 minutes to reflect on the process (P8).
 
@@ -170,6 +170,7 @@ Write your answers in CHANGELOG.md or keep them for yourself. The point is to in
 
 **What you built:**
 - A full-stack application with Python backend and React frontend
+- Tests (backend + frontend) with CI running on every push
 - Running in Docker with one command
 - With a clean git history, meaningful commits, and phase tags
 
@@ -179,10 +180,11 @@ Write your answers in CHANGELOG.md or keep them for yourself. The point is to in
 - How to review diffs for subtle bugs (P12)
 - How to build custom skills from observed patterns (P9)
 - How to set up permissions, hooks, and MCP for workflow efficiency
+- How to let AI generate tests, CI config, and Docker setup (the boring stuff)
 - When to push back on Claude's suggestions (P11, P13)
 
 **What's next:**
-- [What's Next section in the README](../README.md#whats-next-after-the-tutorial) — auth, Postgres, CI/CD, deployment
+- [What's Next section in the README](../README.md#whats-next-after-the-tutorial) — auth, Postgres, deployment
 - [Appendix: What Goes Wrong](appendix-what-goes-wrong.md) — see what happens when you break the principles
 
 ---

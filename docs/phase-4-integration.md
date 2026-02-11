@@ -159,3 +159,4 @@ You now have:
 **Why this phase matters:** This is where the rubber meets the road. Testing in the browser reveals issues that code review alone misses. And the CORS bug demonstrates P11 — AI code is not secure by default. You have to verify it yourself.
 
 **Next:** [Phase 5 — Parallel Work](phase-5-parallel.md)
+

@@ -82,7 +82,7 @@ Don't skip this. Choosing the right tools deserves more thought than implementin
 - Vite over CRA: CRA is deprecated
 
 **Docker: Added last, not first**
-- Develop locally. Containerize in Phase 7. No Docker debugging noise while learning.
+- Develop locally. Containerize in Phase 9. No Docker debugging noise while learning.
 
 **Verify before continuing:**
 - [ ] You understand why these choices were made (you'll put this reasoning in your CLAUDE.md)
@@ -157,7 +157,34 @@ This does two things:
 
 ---
 
-## Step 0.7: Run `/init` and Compare
+## Step 0.7: Set Up Environment Config
+
+Create a `.env.example` with default values for development:
+
+```bash
+# Create .env.example
+cat > .env.example << 'EOF'
+DATABASE_URL=sqlite:///./app.db
+CORS_ORIGINS=http://localhost:5173
+EOF
+
+# Create your local .env from the example
+cp .env.example .env
+
+# Make sure .env is gitignored
+echo ".env" >> .gitignore
+```
+
+Your app will load config from `.env` using `python-dotenv` (we'll add this dependency in Phase 1). This ties directly to the permission deny rules from Step 0.6: Claude can't read `.env`, and now there's a reason — it contains environment-specific config that shouldn't be in the codebase.
+
+**Verify before continuing:**
+- [ ] `.env.example` exists with default values
+- [ ] `.env` exists (copied from the example)
+- [ ] `.gitignore` includes `.env`
+
+---
+
+## Step 0.8: Run `/init` and Compare
 
 Now let's see what Claude Code generates on its own:
 
@@ -184,10 +211,10 @@ Merge anything useful into your CLAUDE.md. Discard the rest. Then exit Claude (`
 
 ---
 
-## Step 0.8: First Commit
+## Step 0.9: First Commit
 
 ```bash
-git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md BUGS.md .claude/settings.json
+git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md BUGS.md .claude/settings.json .env.example .gitignore
 git commit -m "initial commit: project setup with CLAUDE.md, tracking files, and permissions"
 git push -u origin main
 ```
@@ -205,6 +232,7 @@ You now have:
 - A project repo on GitHub with clean tracking files
 - A CLAUDE.md tailored to your project
 - Permission settings that reduce friction and prevent accidents
+- Environment config with `.env.example` committed and `.env` gitignored
 - A REQUIREMENTS.md with all features mapped to phases
 
 **Total tokens used:** Nearly zero. The only Claude interaction was `/init`.

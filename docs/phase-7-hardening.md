@@ -1,57 +1,18 @@
-# Phase 6: Hardening
+# Phase 7: Hardening
 
 **Time:** ~5 minutes | **Tokens:** Moderate
 
 **Principles in action:**
-- P11: AI code is not optimized by default
-- P12: Check git diff for critical logic
+- P11: AI code is not optimized by default — you must explicitly ask for security
 - P13: You don't need an LLM call to calculate 1+1
+- P12: Check git diff for critical logic
+- P9: Own your prompts, own your workflow — build the /review-diff skill
 
 > **Start by running `/clear`** to reset context. Claude will re-read your CLAUDE.md.
 
 ---
 
-## Step 6.1: Add API Tests
-
-```
-Add pytest tests for the [main resource] CRUD endpoints.
-Create backend/tests/test_[resource].py with tests for:
-- POST /api/[resource] — creates an item and returns 201
-- GET /api/[resource] — returns a list
-- GET /api/[resource]/{id} — returns one item
-- GET /api/[resource]/999 — returns 404 for missing item
-- DELETE /api/[resource]/{id} — deletes and returns 200
-
-Use a test database (SQLite in-memory) so tests don't affect dev data.
-Use FastAPI's TestClient.
-```
-
-**Review the diff:**
-- [ ] Tests use an in-memory database, not your dev database
-- [ ] Each test is independent (no shared state between tests)
-- [ ] Assertions check both status codes AND response body content
-- [ ] No excessive mocking — these are integration tests, not unit tests
-
-Run the tests:
-```bash
-cd backend && python -m pytest -v
-```
-
-**Commit:**
-```bash
-git add backend/tests/
-git commit -m "test: add CRUD endpoint tests for [main resource]"
-```
-
-**Verify before continuing:**
-- [ ] All tests pass
-- [ ] Tests run in under 5 seconds
-
-> **Stuck?** Compare with `reference/expense-tracker/backend/tests/`
-
----
-
-## Step 6.2: Security Review
+## Step 7.1: Security Review
 
 Give Claude an explicit, specific security review prompt (P11):
 
@@ -79,7 +40,28 @@ git commit -m "fix: address security review findings"
 
 ---
 
-## Step 6.3: Build the /review-diff Skill
+## Step 7.2: Accessibility Audit
+
+```
+Audit the frontend for basic accessibility issues:
+- Missing alt text on images
+- Form inputs without labels
+- Missing keyboard navigation (can you tab through the app?)
+- Color contrast issues
+- Missing ARIA attributes on interactive elements
+
+Report what you find. Fix the straightforward issues.
+```
+
+**Commit any fixes:**
+```bash
+git add frontend/src/
+git commit -m "fix: address accessibility audit findings"
+```
+
+---
+
+## Step 7.3: Build the /review-diff Skill
 
 This is the most powerful skill you'll build. It reviews your staged changes before you commit.
 
@@ -113,7 +95,7 @@ git commit -m "feat: add /review-diff custom skill for pre-commit review"
 
 ---
 
-## Step 6.4: Set Up the Lint Hook
+## Step 7.4: Set Up the Lint Hook
 
 Add automatic linting after every Claude edit.
 
@@ -179,7 +161,7 @@ git commit -m "feat: add PostToolUse lint hook for automatic linting"
 
 ---
 
-## Step 6.5: Diff Review Exercise
+## Step 7.5: Diff Review Exercise
 
 Before you commit anything else, try your new workflow:
 
@@ -194,21 +176,21 @@ This is the workflow you should use for every meaningful commit going forward. I
 **Commit + push:**
 ```bash
 git add CHANGELOG.md REQUIREMENTS.md
-git commit -m "docs: update tracking files for Phase 6"
+git commit -m "docs: update tracking files for Phase 7"
 git push
 ```
 
 ---
 
-## Phase 6 Complete
+## Phase 7 Complete
 
 You now have:
-- API tests that run in under 5 seconds
 - A security review with real findings addressed
+- An accessibility audit with fixes applied
 - The `/review-diff` skill for pre-commit code review
 - A lint hook that auto-catches style issues
 - Three custom skills total: `/add-endpoint`, `/add-component`, `/review-diff`
 
-**Why this phase matters:** AI code is not optimized by default (P11). Tests, security review, and pre-commit review are how you catch what Claude misses. The `/review-diff` skill alone will save you from more bugs than any other tool in this tutorial.
+**Why this phase matters:** AI code is not optimized by default (P11). Security review, accessibility audit, and pre-commit review are how you catch what Claude misses. The `/review-diff` skill alone will save you from more bugs than any other tool in this tutorial.
 
-**Next:** [Phase 7 — Docker & Ship](phase-7-docker.md)
+**Next:** [Phase 8 — CI/CD](phase-8-cicd.md)

@@ -217,4 +217,4 @@ You now have:
 
 **Why this phase matters:** This is the payoff for everything in Phases 0-1. Clean patterns + CLAUDE.md = multiple agents that stay aligned without talking to each other (P2). Messy foundations would have made this a conflict nightmare.
 
-**Next:** [Phase 6 — Hardening](phase-6-hardening.md)
+**Next:** [Phase 6 — Testing](phase-6-testing.md)

@@ -12,6 +12,7 @@ Features organized by phase. Check them off as you complete each one.
 ## Phase 2 — Backend Core
 - [ ] Database models for main resource
 - [ ] Database models for secondary resource (categories/analytics/statuses)
+- [ ] Alembic migrations set up with initial schema
 - [ ] CRUD endpoints: Create
 - [ ] CRUD endpoints: Read (list + detail)
 - [ ] CRUD endpoints: Update
@@ -40,14 +41,24 @@ Features organized by phase. Check them off as you complete each one.
 - [ ] Branches merged cleanly
 - [ ] `.mcp.json` for GitHub MCP (optional)
 
-## Phase 6 — Hardening
-- [ ] API endpoint tests (pytest)
-- [ ] Security review completed
+## Phase 6 — Testing
+- [ ] Backend API tests (pytest with in-memory SQLite)
+- [ ] Frontend component tests (Vitest + React Testing Library)
+- [ ] Test coverage reviewed and gaps filled on critical paths
+
+## Phase 7 — Hardening
+- [ ] Security review completed (SQL injection, CORS, input validation)
+- [ ] Accessibility audit completed
 - [ ] `/review-diff` custom skill created
 - [ ] Lint hook set up (PostToolUse)
 - [ ] Diff review exercise completed
 
-## Phase 7 — Docker & Ship
+## Phase 8 — CI/CD
+- [ ] GitHub Actions workflow (tests + linting on push/PR)
+- [ ] CI passing on GitHub
+- [ ] Branch protection configured (optional)
+
+## Phase 9 — Docker & Ship
 - [ ] Backend Dockerfile
 - [ ] Frontend Dockerfile
 - [ ] docker-compose.yml

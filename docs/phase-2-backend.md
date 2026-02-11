@@ -142,7 +142,56 @@ git commit -m "feat: add CRUD endpoints for [secondary resource]"
 
 ---
 
-## Step 2.4: Update CLAUDE.md
+## Step 2.4: Set Up Database Migrations (Alembic)
+
+Now that your models exist, set up Alembic so schema changes are tracked properly. This is a decision that deserves time (P6) — you can't just change a model and hope the database updates itself.
+
+```
+Set up Alembic for database migrations.
+- Initialize Alembic in the backend directory
+- Configure it to use our SQLAlchemy models and database URL
+- Generate the initial migration from the current models
+```
+
+Run the migration:
+```bash
+cd backend && alembic upgrade head
+```
+
+Now demonstrate the real workflow — add a small schema change:
+
+```
+Add a "notes" field (optional string, max 500 chars) to the [main resource] model.
+Then generate an Alembic migration for this change.
+```
+
+```bash
+alembic revision --autogenerate -m "add notes field to [resource]"
+alembic upgrade head
+```
+
+**Review the diff:**
+- [ ] `alembic/` directory exists with `env.py` configured correctly
+- [ ] Initial migration creates all tables with correct columns
+- [ ] Second migration adds only the `notes` column (not recreating everything)
+- [ ] Model and migration are in sync
+
+**Commit:**
+```bash
+git add backend/alembic/ backend/alembic.ini backend/app/models/
+git commit -m "feat: add Alembic migrations with initial schema and notes field"
+```
+
+**Verify before continuing:**
+- [ ] `alembic upgrade head` runs without errors
+- [ ] `alembic downgrade -1` and `alembic upgrade head` both work (reversible migration)
+- [ ] The Swagger UI still works with the new field
+
+> **Stuck?** Compare with `reference/expense-tracker/backend/alembic/`
+
+---
+
+## Step 2.5: Update CLAUDE.md
 
 Your project now has backend conventions that have emerged naturally. Capture them:
 
@@ -170,6 +219,7 @@ git push
 
 You now have:
 - Database models with proper constraints and field names
+- Alembic migrations tracking every schema change
 - Full CRUD endpoints for two resources with Pydantic validation
 - A Swagger UI for instant verification
 - CLAUDE.md updated with backend conventions
