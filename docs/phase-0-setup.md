@@ -66,26 +66,69 @@ Any CRUD app with a frontend and backend works. Just make sure it has:
 
 ---
 
-## Step 0.3: Read the Tech Stack Reasoning
+## Step 0.3: The Tech Stack Conversation
 
-Don't skip this. Choosing the right tools deserves more thought than implementing features with them (P6).
+**Don't skip this.** This is one of the most important steps in the entire tutorial.
 
-**Backend: Python + FastAPI + SQLite**
-- Python + JS in one project shows Claude Code works across languages
-- FastAPI auto-generates Swagger docs at `/docs` — instant API verification without Postman
-- Pydantic models make Claude's output more predictable and reviewable
-- SQLite = zero infrastructure. One file. No Docker needed for development.
+AI didn't speed up all steps equally (P6). Feature implementation? Way faster. But choosing your tech stack, designing your schema, defining your conventions — these decisions deserve *more* time now, not less. Because every choice you make here gets amplified across the entire codebase. Pick the wrong framework and Claude will happily build 10,000 lines of code on a shaky foundation.
 
-**Frontend: React + Vite**
-- React has the largest community and most Claude training data
-- Vite over Next.js: we don't need SSR, and clear FE/BE separation matters for parallel work later
-- Vite over CRA: CRA is deprecated
+This is a conversation, not a declaration. We picked a specific stack for this tutorial, but the *reasoning process* is what matters. When you start your next project, you'll make different choices — the point is to think through them deliberately.
 
-**Docker: Added last, not first**
-- Develop locally. Containerize in Phase 9. No Docker debugging noise while learning.
+### Why not just use one language for everything?
+
+You could build the whole thing in JavaScript (Express + React). It would work. But we deliberately chose **Python for the backend and JavaScript for the frontend** because:
+
+- It demonstrates that Claude Code works equally well across languages — you'll see it switch between Python and JS without breaking stride
+- It forces a clean separation between frontend and backend — no temptation to blur the boundary
+- It's closer to how production teams actually work (different languages for different layers)
+
+If you're building your own project after this tutorial and want to use Express + React, go for it. The workflow is the same.
+
+### Backend: Why FastAPI over Flask, Django, or Express?
+
+**FastAPI vs Flask:**
+FastAPI auto-generates interactive API docs at `/docs` (Swagger UI). This means you can test every endpoint instantly without Postman, curl, or writing a frontend. When Claude creates an endpoint, you verify it in 5 seconds. Flask can do this with extensions, but FastAPI has it built in.
+
+**FastAPI vs Django:**
+Django is powerful but opinionated — it comes with an admin panel, ORM, auth system, and more. For this tutorial, that's too much magic. We want to see exactly what Claude generates and understand every piece. FastAPI is minimal — you add only what you need.
+
+**FastAPI vs Express:**
+If we used Express, the entire project would be JavaScript. That misses the point (see above). Also, FastAPI's type hints + Pydantic models make Claude's output more predictable and reviewable — you can see the exact shape of every request and response.
+
+**Why Python's type hints matter for AI coding:**
+When Claude sees `amount: float` in a Pydantic model, it generates consistent, typed code. Without type hints, Claude guesses — and guesses differently each time. Typed code is more reviewable, which means you catch bugs faster (P12).
+
+### Frontend: Why React + Vite over Next.js, Vue, or Svelte?
+
+**React over Vue/Svelte:**
+React has the largest community and the most training data in Claude's knowledge. That translates to better, more consistent code generation. Vue and Svelte are great frameworks — Claude handles them well too — but React gives us the highest chance of clean 1-shot results (P4).
+
+**Vite over Next.js:**
+Next.js blurs the line between frontend and backend (API routes, server components, SSR). That's powerful in production but confusing when you're trying to learn a clean FE/BE workflow. Vite keeps the frontend purely as a client-side app, which makes the architecture obvious and the parallel work demo (Phase 5) much cleaner.
+
+**Vite over Create React App:**
+CRA is deprecated. Don't use it.
+
+### Database: Why SQLite now, Postgres later?
+
+**SQLite for development:**
+Zero infrastructure. One file. No Docker, no database server, no connection strings to debug. You run the app and it just works. This matters because debugging database connection issues during the learning phases is a waste of time and tokens.
+
+**Postgres for production (Phase 9):**
+When we containerize in Phase 9, we'll discuss upgrading to Postgres via Docker Compose. That's the natural point to make that decision — not now.
+
+### Docker: Why added last?
+
+Develop locally first. Containerize last. This matches how real projects work — you don't start by writing Dockerfiles for an app that doesn't exist yet. Docker adds a layer of debugging complexity (build caches, networking, file permissions) that's noise during the learning phases.
+
+### The bigger point
+
+You can swap any of these choices. The workflow — CLAUDE.md, permissions, skills, plan mode, diff review, parallel work — works with any stack. We chose this one because it gives us the clearest path to demonstrating the 13 principles. Your next project might use Go + HTMX + Postgres. The process is the same.
 
 **Verify before continuing:**
-- [ ] You understand why these choices were made (you'll put this reasoning in your CLAUDE.md)
+- [ ] You understand why these choices were made
+- [ ] You could explain the reasoning to a teammate (not just "the tutorial said so")
+- [ ] You're ready to put this reasoning in your CLAUDE.md
 
 ---
 

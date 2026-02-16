@@ -229,16 +229,16 @@ This tutorial is designed for a single $20 Pro session:
 
 ## Tech Stack
 
-**Why these choices?** Because choosing the right tools deserves more thought than implementing features with them (Principle 6). Full reasoning in [Phase 0](docs/phase-0-setup.md).
+AI made feature implementation faster — but it didn't speed up tech stack decisions (Principle 6). In fact, these decisions matter *more* now because every choice gets amplified across thousands of generated lines. Phase 0 includes a full [tech stack conversation](docs/phase-0-setup.md#step-03-the-tech-stack-conversation) walking through why each choice was made and what alternatives we rejected.
 
-| Layer | Choice | Why |
+| Layer | Choice | Why (short version) |
 |-------|--------|-----|
 | **Backend** | Python + FastAPI | Type hints + Pydantic = predictable AI output. Auto-generated `/docs` for instant verification. |
-| **Frontend** | React + Vite | Largest community, most Claude training data. Vite over Next.js — we don't need SSR, and clear FE/BE separation matters for learning. |
+| **Frontend** | React + Vite | Largest community, most Claude training data. Vite over Next.js — clear FE/BE separation matters. |
 | **Database** | SQLite (dev) → Postgres (Docker) | Zero setup for development. Postgres upgrade happens naturally in Phase 9. |
 | **Container** | Docker Compose | One command to run everything. Added last, not first — matches real workflow. |
 
-Both Python and JavaScript in one project. You'll see Claude Code work across both.
+Two languages in one project (Python + JavaScript). You'll see Claude Code switch between both without missing a beat. The workflow — CLAUDE.md, skills, permissions, parallel work — works with any stack.
 
 ---
 
