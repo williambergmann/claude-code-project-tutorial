@@ -3,6 +3,7 @@
     "allow": [
       "Bash(python -m pytest *)",
       "Bash(python -m uvicorn *)",
+      "Bash(alembic *)",
       "Bash(npm run *)",
       "Bash(npm install *)",
       "Bash(npx *)",

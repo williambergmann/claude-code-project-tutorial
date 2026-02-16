@@ -162,6 +162,7 @@ From the tutorial repo, copy the templates into your project:
 ```bash
 # Assuming the tutorial repo is cloned nearby
 cp ../claude-code-project-tutorial/templates/CLAUDE.md.starter ./CLAUDE.md
+cp ../claude-code-project-tutorial/templates/gitignore ./.gitignore
 cp ../claude-code-project-tutorial/templates/CHANGELOG.md ./CHANGELOG.md
 cp ../claude-code-project-tutorial/templates/REQUIREMENTS.md ./REQUIREMENTS.md
 cp ../claude-code-project-tutorial/templates/BUGS.md ./BUGS.md
@@ -176,7 +177,7 @@ This is your file. Make it yours (P9).
 
 **Verify before continuing:**
 - [ ] CLAUDE.md exists with your project name and description
-- [ ] CHANGELOG.md, REQUIREMENTS.md, BUGS.md all exist
+- [ ] .gitignore, CHANGELOG.md, REQUIREMENTS.md, BUGS.md all exist
 - [ ] You've read through CLAUDE.md and it makes sense
 
 ---
@@ -205,7 +206,7 @@ This does two things:
 Create a `.env.example` with default values for development:
 
 ```bash
-# Create .env.example
+# Create .env.example with default dev values
 cat > .env.example << 'EOF'
 DATABASE_URL=sqlite:///./app.db
 CORS_ORIGINS=http://localhost:5173
@@ -213,17 +214,16 @@ EOF
 
 # Create your local .env from the example
 cp .env.example .env
-
-# Make sure .env is gitignored
-echo ".env" >> .gitignore
 ```
 
-Your app will load config from `.env` using `python-dotenv` (we'll add this dependency in Phase 1). This ties directly to the permission deny rules from Step 0.6: Claude can't read `.env`, and now there's a reason — it contains environment-specific config that shouldn't be in the codebase.
+The `.gitignore` you copied in Step 0.5 already excludes `.env` files (but not `.env.example`).
+
+Your app will load config from `.env` using `python-dotenv` (added to requirements in Phase 1). This ties directly to the permission deny rules from Step 0.6: Claude can't read `.env`, and now there's a reason — it contains environment-specific config that shouldn't be in the codebase.
 
 **Verify before continuing:**
 - [ ] `.env.example` exists with default values
 - [ ] `.env` exists (copied from the example)
-- [ ] `.gitignore` includes `.env`
+- [ ] `git status` does NOT show `.env` as an untracked file (gitignore is working)
 
 ---
 

@@ -268,6 +268,7 @@ claude-code-project-tutorial/
 │
 ├── README.md                          ← You are here
 ├── PLAN.md                            ← Full project plan and decisions
+├── LICENSE                            ← MIT
 │
 ├── docs/                              ← Phase-by-phase guide
 │   ├── phase-0-setup.md
@@ -285,6 +286,8 @@ claude-code-project-tutorial/
 ├── templates/                         ← Copy these into your project at Phase 0
 │   ├── CLAUDE.md.starter
 │   ├── settings.json                  ← Permission rules for .claude/settings.json
+│   ├── gitignore                      ← Starter .gitignore (Python + Node + .env)
+│   ├── mcp.json                       ← GitHub MCP config (used in Phase 5)
 │   ├── CHANGELOG.md
 │   ├── REQUIREMENTS.md
 │   └── BUGS.md

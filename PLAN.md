@@ -59,6 +59,8 @@ claude-code-project-tutorial/
 ├── templates/                    # Starter files the user copies into their project
 │   ├── CLAUDE.md.starter         # Minimal Phase 0 version
 │   ├── settings.json             # Permission rules (.claude/settings.json)
+│   ├── gitignore                 # Starter .gitignore (Python + Node + .env)
+│   ├── mcp.json                  # GitHub MCP config (Phase 5)
 │   ├── CHANGELOG.md              # Format example + a couple entries
 │   ├── REQUIREMENTS.md           # Pre-populated with all features by phase
 │   └── BUGS.md                   # Empty with format shown
@@ -133,7 +135,7 @@ This section is written as reasoning, not declarations. It will appear in Phase 
 - Choose project from the 3 options (or bring your own)
 - Read through tech stack reasoning
 - Create GitHub repo, clone locally
-- Copy starter templates into project: CLAUDE.md, CHANGELOG.md, REQUIREMENTS.md, BUGS.md
+- Copy starter templates into project: CLAUDE.md, .gitignore, CHANGELOG.md, REQUIREMENTS.md, BUGS.md
 - REQUIREMENTS.md comes pre-populated with all features organized by phase
 
 **Claude Code setup:**

@@ -61,7 +61,7 @@ Scaffold the FastAPI backend following the plan we just discussed.
 Create:
 - backend/app/main.py with a FastAPI app and a GET /api/health endpoint
 - backend/app/database.py with SQLite connection setup using SQLAlchemy
-- backend/requirements.txt with fastapi, uvicorn, sqlalchemy, pydantic
+- backend/requirements.txt with fastapi, uvicorn, sqlalchemy, pydantic, python-dotenv, alembic
 Keep it minimal. No models or routers yet — just the skeleton.
 ```
 

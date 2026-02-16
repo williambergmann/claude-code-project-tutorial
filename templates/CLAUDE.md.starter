@@ -4,10 +4,12 @@
 [One sentence: what this app does]
 
 ## Tech Stack
-- **Backend:** Python 3.11+ / FastAPI / SQLite (dev) / Pydantic for validation
+- **Backend:** Python 3.11+ / FastAPI / SQLAlchemy / Pydantic for validation
 - **Frontend:** React 18 / Vite / JavaScript
 - **Database:** SQLite for development, Postgres for Docker/production
-- **Testing:** pytest (backend), Vitest or Jest (frontend)
+- **Migrations:** Alembic (auto-generate from SQLAlchemy models)
+- **Testing:** pytest (backend), Vitest (frontend)
+- **Config:** python-dotenv — load from `.env` (never commit `.env`, only `.env.example`)
 
 ## Project Structure
 ```
@@ -37,13 +39,17 @@ frontend/
 # Backend
 cd backend && python -m uvicorn app.main:app --reload
 cd backend && python -m pytest
+cd backend && alembic upgrade head
+cd backend && alembic revision --autogenerate -m "description"
 
 # Frontend
 cd frontend && npm run dev
 cd frontend && npm run build
+cd frontend && npx vitest run
 
 # Both (Docker)
 docker compose up --build
+docker compose down
 ```
 
 ## What NOT to Do

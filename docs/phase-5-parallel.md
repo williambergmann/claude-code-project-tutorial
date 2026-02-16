@@ -113,26 +113,14 @@ This is P2 in action. It only works because Phase 0-1 established clean patterns
 
 This step is optional but demonstrates team workflow (P10).
 
-Create `.mcp.json` in your main project directory:
+Copy the template into your main project directory:
 
 ```bash
 cd /path/to/my-expense-tracker
+cp ../claude-code-project-tutorial/templates/mcp.json .mcp.json
 ```
 
-Create the file:
-
-```json
-{
-  "mcpServers": {
-    "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/"
-    }
-  }
-}
-```
-
-Save it as `.mcp.json` in the project root. This gives Claude access to GitHub tools — creating PRs, commenting on issues, searching code.
+This gives Claude access to GitHub tools — creating PRs, commenting on issues, searching code.
 
 **Why project-scoped:** This file gets committed to version control. Every contributor gets the same MCP config automatically. No "install this plugin" messages in Slack (P10).
 
