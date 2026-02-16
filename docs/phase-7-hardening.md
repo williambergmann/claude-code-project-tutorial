@@ -30,7 +30,17 @@ Don't add code. Just report what you find.
 **What to watch for in Claude's response:**
 - If Claude suggests adding an LLM-powered "smart validation" or "AI-driven security" — push back. That's P13. Simple validation functions are better.
 - If Claude suggests adding a full auth system — acknowledge it but defer to "What's Next." We're hardening, not feature-creeping.
-- If Claude finds real issues — fix them.
+
+If Claude finds real issues, prompt it to fix them:
+
+```
+Fix the security issues you found. Don't add auth or rate limiting — just fix input validation, error handling, and any CORS issues.
+```
+
+**Verify before continuing:**
+- [ ] Claude found at least 1 real issue (if it found zero, your code is unusually clean — or the review was too shallow)
+- [ ] Fixes address the actual problems without over-engineering
+- [ ] All tests still pass after fixes
 
 **Commit any fixes:**
 ```bash
@@ -50,8 +60,14 @@ Audit the frontend for basic accessibility issues:
 - Color contrast issues
 - Missing ARIA attributes on interactive elements
 
-Report what you find. Fix the straightforward issues.
+Report what you find and fix the straightforward issues.
 ```
+
+**Verify before continuing:**
+- [ ] Form inputs have associated labels
+- [ ] Interactive elements are keyboard-navigable (tab through the app)
+- [ ] Images have alt text (if any)
+- [ ] All tests still pass after fixes
 
 **Commit any fixes:**
 ```bash
@@ -182,7 +198,10 @@ Review what we built in Phase 7. Then:
 3. Update BUGS.md — log any security or accessibility issues found (even if already fixed)
 ```
 
-Review what Claude wrote.
+**Review what Claude wrote:**
+- [ ] CHANGELOG mentions security findings, a11y fixes, the skill, and the hook
+- [ ] REQUIREMENTS.md has the correct items checked off
+- [ ] BUGS.md logs security/a11y issues found (even if already fixed)
 
 **Commit + push:**
 ```bash

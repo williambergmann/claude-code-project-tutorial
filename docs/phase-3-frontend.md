@@ -112,7 +112,7 @@ git commit -m "feat: add API client module"
 
 **Verify before continuing:**
 - [ ] File exists and exports the expected functions
-- [ ] No TypeScript errors or import issues
+- [ ] No syntax errors or import issues
 
 ---
 
@@ -126,14 +126,15 @@ Ask Claude to add a feature that should follow established patterns:
 Add a delete button to each row in the [resource] list page. When clicked, show a confirmation dialog before deleting. Use the API client's delete function.
 ```
 
-**What to look for:**
-- Did Claude put the delete logic in the right place?
-- Did it import from the API client correctly?
-- Did it follow the same component and event handling patterns?
-- Did it do this in **one shot**?
+**Verify before continuing:**
+- [ ] Delete button appears on each row
+- [ ] Clicking delete shows a confirmation dialog
+- [ ] Confirming deletes the item and refreshes the list
+- [ ] Claude imported from the API client correctly (not inline fetch)
+- [ ] Claude did this in **one shot**
 
-If yes → patterns are holding up well.
-If no → figure out what's unclear. Is CLAUDE.md missing a convention? Is the code structure ambiguous?
+If all checked → patterns are holding up well.
+If not → figure out what's unclear. Is CLAUDE.md missing a convention? Is the code structure ambiguous? Fix the issue and update CLAUDE.md before continuing.
 
 **Commit:**
 ```bash
@@ -183,7 +184,10 @@ Review what we built in Phase 3. Then:
 3. If anything we built doesn't appear in REQUIREMENTS.md, add it
 ```
 
-**Review what Claude wrote** — same discipline as code review. Did it accurately capture what was built? Did it check off items that are actually done?
+**Review what Claude wrote:**
+- [ ] CHANGELOG.md accurately summarizes what was built (not overstated)
+- [ ] REQUIREMENTS.md has the correct items checked off
+- [ ] Any new items were added to REQUIREMENTS.md if needed
 
 **Commit + push:**
 ```bash

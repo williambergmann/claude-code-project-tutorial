@@ -40,6 +40,10 @@ Review the output. Look for:
 - Components with 0% coverage
 - Error handling paths that are never exercised
 
+**Verify before continuing:**
+- [ ] Coverage reports ran without errors
+- [ ] You can identify at least 2-3 areas that need more tests
+
 ---
 
 ## Step 6.2: Fill Backend Test Gaps
@@ -131,7 +135,10 @@ Review what we built in Phase 6. Then:
 3. If any tests revealed bugs we haven't fixed, add them to BUGS.md
 ```
 
-Review what Claude wrote — did it include the real coverage numbers, or make them up?
+**Review what Claude wrote:**
+- [ ] CHANGELOG includes real coverage numbers (not made up)
+- [ ] REQUIREMENTS.md has the correct items checked off
+- [ ] Any test-revealed bugs are logged in BUGS.md
 
 **Commit + push:**
 ```bash

@@ -139,13 +139,14 @@ Ask Claude to do something new that should follow the established pattern:
 Add a GET /api/ping endpoint that returns {"message": "pong"}. Follow the same pattern as the health endpoint.
 ```
 
-**What to look for:**
-- Did Claude put it in the right file?
-- Does it match the style of the health endpoint?
-- Did it do this in one shot without confusion?
+**Verify before continuing:**
+- [ ] Claude put the endpoint in the right file (same file as health)
+- [ ] The code matches the style of the health endpoint
+- [ ] Claude did this in one shot without confusion
+- [ ] `http://localhost:8000/api/ping` returns `{"message": "pong"}`
 
-If yes → your foundation is solid. The patterns are working.
-If no → something in the scaffold needs fixing before you build on top of it.
+If all checked → your foundation is solid. The patterns are working.
+If not → something in the scaffold needs fixing before you build on top of it. Fix the issue now, update CLAUDE.md if a convention was unclear, then re-commit.
 
 **Commit:**
 ```bash

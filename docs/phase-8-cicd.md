@@ -81,7 +81,9 @@ Review what we set up in Phase 8. Then:
 2. Check off completed items in REQUIREMENTS.md for Phase 8
 ```
 
-Review what Claude wrote.
+**Review what Claude wrote:**
+- [ ] CHANGELOG mentions CI workflow and branch protection (if set up)
+- [ ] REQUIREMENTS.md has the correct items checked off
 
 **Commit + push:**
 ```bash

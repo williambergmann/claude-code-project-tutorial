@@ -70,64 +70,52 @@ Any CRUD app with a frontend and backend works. Just make sure it has:
 
 **Don't skip this.** This is one of the most important steps in the entire tutorial.
 
-AI didn't speed up all steps equally (P6). Feature implementation? Way faster. But choosing your tech stack, designing your schema, defining your conventions — these decisions deserve *more* time now, not less. Because every choice you make here gets amplified across the entire codebase. Pick the wrong framework and Claude will happily build 10,000 lines of code on a shaky foundation.
+AI didn't speed up all steps equally (P6). Feature implementation? Way faster. But choosing your tech stack, designing your schema, defining your conventions — these decisions deserve *more* time now, not less. Every choice here gets amplified across the entire codebase. Pick the wrong framework and Claude will happily build 10,000 lines of code on a shaky foundation.
 
-This is a conversation, not a declaration. We picked a specific stack for this tutorial, but the *reasoning process* is what matters. When you start your next project, you'll make different choices — the point is to think through them deliberately.
+Here's our stack and why. Skim the headlines — read the details for anything you'd challenge.
 
-### Why not just use one language for everything?
+| Layer | Choice | Key reason |
+|-------|--------|------------|
+| Backend | **FastAPI** (Python) | Auto-generated Swagger docs = verify endpoints in 5 seconds |
+| Frontend | **React + Vite** | Largest training data = best 1-shot results (P4) |
+| Database | **SQLite** → Postgres | Zero infrastructure for dev; upgrade in Phase 9 |
+| Container | **Docker** (last) | Don't containerize what doesn't exist yet |
 
-You could build the whole thing in JavaScript (Express + React). It would work. But we deliberately chose **Python for the backend and JavaScript for the frontend** because:
+### Why two languages?
 
-- It demonstrates that Claude Code works equally well across languages — you'll see it switch between Python and JS without breaking stride
-- It forces a clean separation between frontend and backend — no temptation to blur the boundary
-- It's closer to how production teams actually work (different languages for different layers)
+Python backend + JavaScript frontend is deliberate:
+- Shows Claude works equally well across languages
+- Forces clean FE/BE separation — no temptation to blur boundaries
+- Matches how production teams actually work
 
-If you're building your own project after this tutorial and want to use Express + React, go for it. The workflow is the same.
+Want to use Express + React instead? The workflow is the same.
 
-### Backend: Why FastAPI over Flask, Django, or Express?
+### Backend: Why FastAPI?
 
-**FastAPI vs Flask:**
-FastAPI auto-generates interactive API docs at `/docs` (Swagger UI). This means you can test every endpoint instantly without Postman, curl, or writing a frontend. When Claude creates an endpoint, you verify it in 5 seconds. Flask can do this with extensions, but FastAPI has it built in.
+| vs. Flask | vs. Django | vs. Express |
+|-----------|-----------|-------------|
+| Built-in Swagger UI — test endpoints instantly, no Postman needed | Django has too much magic (admin, ORM, auth). We want to see what Claude generates. | Would make the whole project JS — misses the two-language point |
 
-**FastAPI vs Django:**
-Django is powerful but opinionated — it comes with an admin panel, ORM, auth system, and more. For this tutorial, that's too much magic. We want to see exactly what Claude generates and understand every piece. FastAPI is minimal — you add only what you need.
+**Why type hints matter for AI coding:** When Claude sees `amount: float` in a Pydantic model, it generates consistent, typed code. Without types, Claude guesses — and guesses differently each time (P12).
 
-**FastAPI vs Express:**
-If we used Express, the entire project would be JavaScript. That misses the point (see above). Also, FastAPI's type hints + Pydantic models make Claude's output more predictable and reviewable — you can see the exact shape of every request and response.
+### Frontend: Why React + Vite?
 
-**Why Python's type hints matter for AI coding:**
-When Claude sees `amount: float` in a Pydantic model, it generates consistent, typed code. Without type hints, Claude guesses — and guesses differently each time. Typed code is more reviewable, which means you catch bugs faster (P12).
+- **React over Vue/Svelte** — larger community, more training data, more consistent Claude output
+- **Vite over Next.js** — Next.js blurs FE/BE boundaries (API routes, SSR). Vite keeps it purely client-side, which makes the architecture obvious
+- **Vite over CRA** — CRA is deprecated
 
-### Frontend: Why React + Vite over Next.js, Vue, or Svelte?
+### Database and Docker
 
-**React over Vue/Svelte:**
-React has the largest community and the most training data in Claude's knowledge. That translates to better, more consistent code generation. Vue and Svelte are great frameworks — Claude handles them well too — but React gives us the highest chance of clean 1-shot results (P4).
+**SQLite now:** Zero infrastructure. One file. No connection strings to debug. Upgrade to Postgres when we containerize in Phase 9.
 
-**Vite over Next.js:**
-Next.js blurs the line between frontend and backend (API routes, server components, SSR). That's powerful in production but confusing when you're trying to learn a clean FE/BE workflow. Vite keeps the frontend purely as a client-side app, which makes the architecture obvious and the parallel work demo (Phase 5) much cleaner.
-
-**Vite over Create React App:**
-CRA is deprecated. Don't use it.
-
-### Database: Why SQLite now, Postgres later?
-
-**SQLite for development:**
-Zero infrastructure. One file. No Docker, no database server, no connection strings to debug. You run the app and it just works. This matters because debugging database connection issues during the learning phases is a waste of time and tokens.
-
-**Postgres for production (Phase 9):**
-When we containerize in Phase 9, we'll discuss upgrading to Postgres via Docker Compose. That's the natural point to make that decision — not now.
-
-### Docker: Why added last?
-
-Develop locally first. Containerize last. This matches how real projects work — you don't start by writing Dockerfiles for an app that doesn't exist yet. Docker adds a layer of debugging complexity (build caches, networking, file permissions) that's noise during the learning phases.
+**Docker last:** Develop locally first. Docker adds debugging complexity (build caches, networking, file permissions) that's noise during learning phases.
 
 ### The bigger point
 
-You can swap any of these choices. The workflow — CLAUDE.md, permissions, skills, plan mode, diff review, parallel work — works with any stack. We chose this one because it gives us the clearest path to demonstrating the 13 principles. Your next project might use Go + HTMX + Postgres. The process is the same.
+You can swap any of these choices. The workflow — CLAUDE.md, permissions, skills, plan mode, diff review, parallel work — works with any stack. Your next project might use Go + HTMX + Postgres. The process is the same.
 
 **Verify before continuing:**
-- [ ] You understand why these choices were made
-- [ ] You could explain the reasoning to a teammate (not just "the tutorial said so")
+- [ ] You understand why these choices were made (skim the table, read what caught your eye)
 - [ ] You're ready to put this reasoning in your CLAUDE.md
 
 ---

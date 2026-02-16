@@ -102,13 +102,13 @@ git commit -m "feat: connect frontend to backend API with full CRUD flow"
 Now that frontend and backend are connected, test the integration:
 
 ```
-Write tests that verify the full CRUD flow works end-to-end:
-1. Backend: add a test for the filter query parameter we'll add next
-2. Frontend: add a test for the main list page that mocks the API and verifies items render
-3. Frontend: add a test for the form component that verifies submit calls the API
+Write tests for the integration we just built:
+1. Frontend: test the main list page — mock the API, verify items render, verify loading state
+2. Frontend: test the form component — verify submit calls the API with correct data
+3. Frontend: test the delete flow — verify confirmation dialog and API call
 
-Use the same test patterns from Phase 2 (backend) and set up Vitest + React Testing Library for frontend.
-For frontend, install vitest, @testing-library/react, and @testing-library/jest-dom as dev dependencies.
+Use Vitest + React Testing Library for frontend tests.
+Install vitest, @testing-library/react, and @testing-library/jest-dom as dev dependencies if not already installed.
 ```
 
 Run both test suites:
@@ -117,10 +117,15 @@ cd backend && python -m pytest -v
 cd frontend && npx vitest run
 ```
 
+**Verify before continuing:**
+- [ ] All backend tests still pass (no regressions from CORS or integration changes)
+- [ ] New frontend tests pass
+- [ ] Frontend tests mock the API properly (no real network calls in tests)
+
 **Commit:**
 ```bash
 git add backend/tests/ frontend/src/ frontend/package.json frontend/vite.config.*
-git commit -m "test: add integration tests for CRUD flow and frontend components"
+git commit -m "test: add frontend component tests for CRUD flow"
 ```
 
 > **Why here?** You just connected two systems. Integration points are where bugs hide. A test that worked in Phase 2 (isolated backend) might fail now that CORS and real API calls are involved.
@@ -140,8 +145,13 @@ Add a filter dropdown that lets users filter [resources] by [category/status/typ
 - Did it update the frontend to send the filter?
 - Did it do it in ONE SHOT without breaking existing functionality?
 
-If yes → architecture is solid through 4 phases. This is a great sign.
-If no → investigate. Common causes:
+**Verify before continuing:**
+- [ ] Claude modified both backend AND frontend in one shot
+- [ ] The filter works in the browser (select a category/status → list updates)
+- [ ] Existing CRUD operations still work (no regressions)
+- [ ] All tests still pass
+
+If the 1-shot test failed, investigate. Common causes:
 - CLAUDE.md is missing conventions Claude needs
 - The code has gotten tangled (too much in one file, unclear module boundaries)
 - The prompt was too vague — try being more specific
@@ -165,7 +175,10 @@ Review the code we built in Phase 4. Then:
 3. Check off completed items in REQUIREMENTS.md for Phase 4
 ```
 
-**Review what Claude wrote.** Did it find real issues or just pad the bug list? Are the CHANGELOG entries accurate?
+**Review what Claude wrote:**
+- [ ] BUGS.md entries are real issues (not padding)
+- [ ] CHANGELOG.md accurately summarizes what was built
+- [ ] REQUIREMENTS.md has the correct items checked off
 
 **Commit + push:**
 ```bash

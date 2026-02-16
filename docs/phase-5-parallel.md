@@ -54,6 +54,10 @@ Go back to your main directory:
 cd /path/to/my-expense-tracker
 ```
 
+**Verify before continuing:**
+- [ ] `cd ../my-app-search/backend && python -c "import fastapi"` works (no import error)
+- [ ] `cd ../my-app-export/frontend && ls node_modules/.package-lock.json` exists
+
 ---
 
 ## Step 5.3: Run Two Claudes Simultaneously
@@ -108,6 +112,7 @@ This is P2 in action. It only works because Phase 0-1 established clean patterns
 **Verify before continuing:**
 - [ ] Terminal 1: search feature works in the browser
 - [ ] Terminal 2: export feature works (downloads a CSV file)
+- [ ] Tests pass in both worktrees
 
 ---
 
@@ -125,6 +130,10 @@ cp ../claude-code-project-tutorial/templates/mcp.json .mcp.json
 This gives Claude access to GitHub tools — creating PRs, commenting on issues, searching code.
 
 **Why project-scoped:** This file gets committed to version control. Every contributor gets the same MCP config automatically. No "install this plugin" messages in Slack (P10).
+
+**Verify before continuing:**
+- [ ] `.mcp.json` exists in your project root
+- [ ] The file contains valid JSON with the GitHub MCP config
 
 ---
 
@@ -144,7 +153,7 @@ git merge feature/export
 
 **What to expect:**
 - If your architecture is clean (independent components, no shared mutable state), these should merge without conflicts.
-- If there ARE conflicts, they'll likely be in shared files like `App.jsx` (routing) or `main.py` (router registration). These are easy to resolve.
+- If there ARE conflicts, they'll likely be in shared files like `App.jsx` (routing) or `main.py` (router registration). Ask Claude to help: "Resolve the merge conflicts in App.jsx — keep both the search and export features."
 
 Resolve any conflicts, then verify both features work together:
 ```bash
@@ -153,7 +162,12 @@ cd backend && python -m uvicorn app.main:app --reload
 cd frontend && npm run dev
 ```
 
-Open the browser — search and export should both work.
+**Verify before continuing:**
+- [ ] Both servers start without errors
+- [ ] Search feature works in the browser
+- [ ] Export feature works (downloads a CSV file)
+- [ ] Existing CRUD operations still work (no regressions)
+- [ ] All tests pass: `cd backend && python -m pytest -v` and `cd frontend && npx vitest run`
 
 **Clean up worktrees:**
 ```bash
@@ -163,15 +177,20 @@ git branch -d feature/search feature/export
 ```
 
 **Commit + push:**
+
+First, commit the MCP config (if you set it up):
 ```bash
 git add .mcp.json
 git commit -m "feat: add GitHub MCP config for team workflow"
-git add -A && git status  # review what's staged
+```
+
+Then review what the merge brought in and commit:
+```bash
+git status  # review what's changed — the merge already combined the code
+git add backend/ frontend/
 git commit -m "feat: merge search and export features from parallel development"
 git push
 ```
-
-Wait — we just said never use `git add -A`. In this case, review `git status` first. The merge already combined the changes. Make sure nothing unexpected is in there.
 
 ---
 
@@ -184,7 +203,10 @@ Review what we built in Phase 5. Then:
 3. Check BUGS.md — did the merge introduce any issues? Log them if so.
 ```
 
-Review what Claude wrote.
+**Review what Claude wrote:**
+- [ ] CHANGELOG entry mentions parallel development and merge result
+- [ ] REQUIREMENTS.md has the correct items checked off
+- [ ] BUGS.md is updated if any merge issues were found
 
 **Commit + push:**
 ```bash
