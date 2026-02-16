@@ -1,10 +1,10 @@
-# Build a Full-Stack App with Claude Code CLI
+# Build a Full-Stack App with Claude Code
 
 **From first commit to running in Docker — a hands-on guide for engineers.**
 
 > Most Claude Code tutorials show you prompts. This one builds a real project.
 
-You'll build a complete full-stack application (Python backend + React frontend) using Claude Code CLI, learning the workflow patterns that separate productive AI-assisted development from chaotic prompt-and-pray.
+You'll build a complete full-stack application (Python backend + React frontend) using Claude Code, learning the workflow patterns that separate productive AI-assisted development from chaotic prompt-and-pray.
 
 ---
 
@@ -34,10 +34,10 @@ Phase 2  Backend Core            ~10 min    Models, Alembic migrations, API, dif
 Phase 3  Frontend Core           ~10 min    Components, second skill, "continue" workflow
 Phase 4  Integration             ~10 min    Connect FE↔BE, catch the planted bug
 Phase 5  Parallel Work           ~10 min    Git worktrees, GitHub MCP, two agents
-Phase 6  Testing                 ~10 min    pytest, Vitest, React Testing Library, coverage
+Phase 6  Test Coverage & Gaps     ~10 min    Coverage analysis, fill gaps, edge cases
 Phase 7  Hardening               ~5 min     Security audit, /review-diff skill, lint hook
 Phase 8  CI/CD                   ~5 min     GitHub Actions workflow, branch protection
-Phase 9  Docker & Ship           ~5 min     Containerize, launch, retrospective
+Phase 9  Docker & Ship           ~5 min     Containerize, launch, deploy (optional), retrospective
                                  ─────
                                  ~75 min total
 ```
@@ -79,9 +79,14 @@ Every phase maps back to these. They're not theory — they're the difference be
 
 You need 7 things installed. We'll help you check each one.
 
-### 1. Claude Code CLI + Claude Pro subscription
+### 1. Claude Code + Claude Pro subscription
 
 You need an active **Claude Pro** ($20/mo) or **Max** subscription. The tutorial fits in one token session.
+
+**Claude Code runs in:**
+- **Terminal (CLI)** — the primary interface. Install globally via npm.
+- **VS Code** — install the [Claude Code extension](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code). Works in any VS Code-compatible editor (VS Code, Cursor, Windsurf, etc.)
+- **JetBrains IDEs** — install the [Claude Code plugin](https://plugins.jetbrains.com/plugin/claude-code) for IntelliJ, WebStorm, PyCharm, etc.
 
 ```bash
 # Install Claude Code CLI
@@ -94,6 +99,8 @@ claude --version
 If you don't have npm yet, install Node.js first (step 4 below).
 
 [Full install guide](https://docs.anthropic.com/en/docs/claude-code/overview)
+
+> **What about other AI coding tools?** Tools like [Antigravity](https://antigravity.dev) and [Cursor](https://cursor.com) can use Claude models (including Opus) through their own integrations. The 13 principles in this tutorial apply to any AI coding tool. However, the specific workflow features we teach — custom skills, hooks, MCP servers, permission settings, plan mode — are Claude Code features. If you're using a different tool, adapt those sections to your tool's equivalents.
 
 ### 2. Python 3.11+
 
@@ -327,7 +334,7 @@ Once you've completed all 10 phases, you have a working app with tests, CI/CD, a
 **Project extensions:**
 - **Add authentication** — JWT tokens, login/signup, protected routes
 - **Switch SQLite to Postgres** — update docker-compose, production migrations
-- **Deploy** — Railway, Fly.io, or a VPS
+- **Deploy to production** — if you skipped the optional deploy step in Phase 9, try Railway, Fly.io, Render, or a VPS
 - **Add real-time features** — WebSockets for live updates
 
 **Advanced Claude Code features:**

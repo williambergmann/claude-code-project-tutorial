@@ -113,7 +113,47 @@ git commit -m "feat: add CRUD endpoints for [main resource]"
 
 ---
 
-## Step 2.3: Add Secondary Resource
+## Step 2.3: Write Tests for the Main Resource
+
+Don't wait until Phase 6. Write tests now while the endpoints are fresh.
+
+```
+Write pytest tests for the [main resource] CRUD endpoints we just created.
+Create backend/tests/test_[resource].py with tests for:
+- POST /api/[resource] — creates and returns 201
+- GET /api/[resource] — returns a list
+- GET /api/[resource]/{id} — returns one item
+- GET /api/[resource]/999 — returns 404
+- DELETE /api/[resource]/{id} — returns 200
+
+Use FastAPI's TestClient with an in-memory SQLite database so tests don't touch dev data.
+```
+
+Run them:
+```bash
+cd backend && python -m pytest -v
+```
+
+**Review the diff:**
+- [ ] Tests use in-memory database, not your dev database
+- [ ] Each test is independent (no shared state)
+- [ ] Assertions check both status codes AND response body
+
+**Commit:**
+```bash
+git add backend/tests/
+git commit -m "test: add CRUD tests for [main resource]"
+```
+
+**Verify before continuing:**
+- [ ] All tests pass
+- [ ] Tests run in under 5 seconds
+
+> **Why now?** These tests are your safety net for everything that follows. When Phase 4 connects the frontend, or Phase 5 runs parallel agents, these tests catch regressions immediately. Testing after the fact is always harder than testing alongside.
+
+---
+
+## Step 2.4: Add Secondary Resource
 
 ```
 Create the [secondary resource] model endpoints following the same pattern as [main resource].
@@ -142,7 +182,7 @@ git commit -m "feat: add CRUD endpoints for [secondary resource]"
 
 ---
 
-## Step 2.4: Set Up Database Migrations (Alembic)
+## Step 2.5: Set Up Database Migrations (Alembic)
 
 Now that your models exist, set up Alembic so schema changes are tracked properly. This is a decision that deserves time (P6) — you can't just change a model and hope the database updates itself.
 
@@ -191,7 +231,7 @@ git commit -m "feat: add Alembic migrations with initial schema and notes field"
 
 ---
 
-## Step 2.5: Update CLAUDE.md
+## Step 2.6: Update CLAUDE.md
 
 Your project now has backend conventions that have emerged naturally. Capture them:
 

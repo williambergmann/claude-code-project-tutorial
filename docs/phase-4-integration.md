@@ -97,7 +97,37 @@ git commit -m "feat: connect frontend to backend API with full CRUD flow"
 
 ---
 
-## Step 4.3: Health Check — The 1-Shot Test (Again)
+## Step 4.3: Add Integration Tests
+
+Now that frontend and backend are connected, test the integration:
+
+```
+Write tests that verify the full CRUD flow works end-to-end:
+1. Backend: add a test for the filter query parameter we'll add next
+2. Frontend: add a test for the main list page that mocks the API and verifies items render
+3. Frontend: add a test for the form component that verifies submit calls the API
+
+Use the same test patterns from Phase 2 (backend) and set up Vitest + React Testing Library for frontend.
+For frontend, install vitest, @testing-library/react, and @testing-library/jest-dom as dev dependencies.
+```
+
+Run both test suites:
+```bash
+cd backend && python -m pytest -v
+cd frontend && npx vitest run
+```
+
+**Commit:**
+```bash
+git add backend/tests/ frontend/src/ frontend/package.json frontend/vite.config.*
+git commit -m "test: add integration tests for CRUD flow and frontend components"
+```
+
+> **Why here?** You just connected two systems. Integration points are where bugs hide. A test that worked in Phase 2 (isolated backend) might fail now that CORS and real API calls are involved.
+
+---
+
+## Step 4.4: Health Check — The 1-Shot Test (Again)
 
 Your most important test yet (P4):
 
@@ -124,7 +154,7 @@ git commit -m "feat: add filter by [category/status] with query parameter"
 
 ---
 
-## Step 4.4: Review and Log Any Bugs
+## Step 4.5: Review and Log Any Bugs
 
 Let Claude do a sweep and update all tracking files at once:
 

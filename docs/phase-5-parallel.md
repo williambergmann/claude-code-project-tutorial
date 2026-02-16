@@ -76,6 +76,7 @@ The search should:
 - Show "No results found" when nothing matches
 - Clear button to reset the search
 Follow existing component patterns.
+Include a test for the search functionality.
 ```
 
 **Terminal 2:**
@@ -94,6 +95,7 @@ When clicked:
 - Download it as a .csv file using a Blob and download link
 - The file should be named [resource]-export-YYYY-MM-DD.csv
 No external libraries — use plain JavaScript.
+Include a test for the CSV generation logic.
 ```
 
 **Let both agents work.** Watch them in parallel. Notice:

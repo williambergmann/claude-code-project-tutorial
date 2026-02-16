@@ -235,6 +235,8 @@ The `!`find ...`` syntax injects live project context before Claude starts — i
 - **Prompt:** Create CRUD endpoints for the main resource
 - **Review diff:** Input validation? Error handling? SQL injection safety?
 - **Commit**
+- **Prompt:** Write tests for the main resource endpoints (pytest + TestClient + in-memory SQLite)
+- **Run tests, commit**
 - **Prompt:** Add secondary resource (categories / analytics / statuses)
 - **Commit + push**
 - Update CLAUDE.md with backend conventions that emerged
@@ -382,30 +384,25 @@ Resolve any conflicts (guide explains why there should be few if architecture is
 
 ---
 
-### Phase 6: Testing (~10 min)
+### Phase 6: Test Coverage & Gaps (~10 min)
 
 **Principles demonstrated:** 11 (not optimized by default), 4 (1-shot test)
 
-Test generation is AI's sweet spot — boring but necessary work that Claude does well. This phase covers both backend and frontend testing.
+By this point, users should already have tests from Phases 2, 4, and 5. This phase is about filling gaps and making the test suite comprehensive — not starting from scratch.
 
 **What happens:**
 
-**Backend tests (pytest):**
-- **Prompt:** Create pytest tests for all CRUD endpoints on the main resource. Use FastAPI's TestClient with an in-memory SQLite database. Test success cases and error cases (404, 422).
-- **Review:** Are tests independent? Do they use a test database? Do assertions check response body, not just status codes?
-- **Commit**
+**Coverage analysis:**
+- Run `pytest --cov` and `npx vitest --coverage` to see what's missing
+- Identify untested endpoints, components, and error paths
 
-**Frontend tests (Vitest + React Testing Library):**
-- **Prompt:** Set up Vitest and React Testing Library. Write tests for the main list page component and the form component. Test rendering, user interactions (click, type, submit), and API error states.
-- **Review:** Are tests testing behavior (what the user sees) not implementation details (internal state)?
-- **Commit**
-
-**Test coverage:**
-- Run `pytest --cov` and `npx vitest --coverage` to see coverage
-- Ask Claude to fill gaps on critical paths — not aiming for 100%, just covering the paths that matter
+**Fill gaps:**
+- **Prompt:** Fill backend test gaps — secondary resource, error handling, edge cases
+- **Prompt:** Fill frontend test gaps — untested components, user interactions, loading states
 - **Commit + push**
 
 **Key teaching moments:**
+- Tests should be written alongside features, not as an afterthought — this is even more important with AI-generated code
 - AI-generated tests save massive time, but you still need to verify they test the right things
 - Frontend tests should test behavior (clicks, renders) not implementation (state, refs)
 - Coverage is a guide, not a goal — 80% on critical paths beats 100% on boilerplate
@@ -529,6 +526,8 @@ CI/CD is one of AI's highest-value use cases. Writing GitHub Actions YAML is ted
 - **Prompt:** Create docker-compose.yml orchestrating both services
 - `docker compose up --build`
 - Open browser → see the working app
+- **(Optional)** Browser testing with AI IDE preview (e.g., Antigravity's Chrome plugin)
+- **(Optional)** Deploy to free hosting (Render, Railway, Fly.io)
 - **Final commit + push**
 - `git tag v1.0`
 - Final CLAUDE.md update reflecting the complete project state
@@ -639,6 +638,10 @@ These are all mentioned in the "What's Next" section so users know they exist.
 ---
 
 ## Key Patterns Across All Phases
+
+### Test Alongside, Not After
+
+Tests are written alongside features starting in Phase 2, not deferred to Phase 6. In agentic coding, tests serve a dual purpose: they verify the agent's output works correctly, and they catch regressions when the agent modifies code in later phases. Phase 6 exists to fill coverage gaps and add edge cases — by then, the core test suite should already exist.
 
 ### The Commit Rhythm
 

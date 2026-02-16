@@ -222,6 +222,23 @@ git push
 
 ---
 
+## A Note on Testing in Agentic Coding
+
+From this point forward, you should **write tests alongside features, not after**. This is even more important with AI-generated code than with hand-written code.
+
+Why? When Claude generates a feature, tests are how you verify it actually works — not just that it looks right in the diff. Tests also give the agent a feedback loop: if Claude introduces a regression in Phase 4, the tests from Phase 2 catch it immediately.
+
+The pattern for every feature from here on:
+1. Prompt Claude to build the feature
+2. Review the diff
+3. Prompt Claude to write tests for that feature
+4. Run the tests — if they fail, fix before committing
+5. Commit feature + tests together
+
+Phase 6 exists to fill coverage gaps and add edge cases, not to start testing from scratch. By then, you should already have tests for every major feature.
+
+---
+
 ## Phase 1 Complete
 
 You now have:

@@ -111,7 +111,58 @@ Stop with `Ctrl+C` when you're done testing.
 
 ---
 
-## Step 9.5: Final Commit, Tag, and Push
+## Step 9.5: Browser Testing (Optional)
+
+If you're using an AI IDE with browser preview capabilities (like Antigravity's Chrome plugin), this is a great time to test the app visually:
+
+1. Launch the Docker containers (`docker compose up --build`)
+2. Open the browser preview pointing to `http://localhost:3000`
+3. Ask your AI to visually inspect the DOM and verify:
+   - All elements are rendering correctly
+   - Forms submit and update the page
+   - Navigation works between pages
+   - The layout is responsive at different widths
+
+This kind of visual testing catches issues that automated tests miss — broken layouts, invisible elements, z-index problems, or buttons that render but aren't clickable.
+
+> **Note:** This step requires a tool with browser/DOM access. If you're using Claude Code CLI without a browser plugin, you can do this manually — open the app in your browser and test the flows yourself.
+
+---
+
+## Step 9.6: Deploy to the Web (Optional)
+
+Want to share what you built? Deploy it for free on [Render](https://render.com):
+
+```
+Help me deploy this app to Render.com.
+I need:
+1. A render.yaml (Blueprint) file that defines both services
+2. The backend as a Web Service (Python, using the existing Dockerfile)
+3. The frontend as a Static Site (build command: npm run build, publish directory: dist)
+4. Environment variables configured for production (CORS origins pointing to the Render frontend URL)
+```
+
+**Other free hosting options:**
+- [Railway](https://railway.app) — similar to Render, generous free tier
+- [Fly.io](https://fly.io) — deploy Docker containers directly
+- [Vercel](https://vercel.com) (frontend only) + [Render](https://render.com) (backend)
+
+**Review the diff:**
+- [ ] No secrets or API keys in the config files
+- [ ] CORS origins point to the production frontend URL, not localhost
+- [ ] The database is configured for production (Render provides managed Postgres)
+
+**Commit:**
+```bash
+git add render.yaml
+git commit -m "feat: add Render deployment config"
+```
+
+> **Why optional?** Deployment is worth learning but the specifics depend on your hosting choice. The workflow is the same: prompt Claude, review the config, deploy.
+
+---
+
+## Step 9.7: Final Commit, Tag, and Push
 
 ```bash
 # Update CLAUDE.md with Docker commands
@@ -136,7 +187,7 @@ git push origin v1.0
 
 ---
 
-## Step 9.6: Retrospective
+## Step 9.8: Retrospective
 
 You're done building. Take 2 minutes to reflect on the process (P8).
 
