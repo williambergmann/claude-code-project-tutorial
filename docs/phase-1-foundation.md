@@ -89,7 +89,7 @@ git commit -m "feat: scaffold FastAPI backend with health endpoint and SQLite se
 - [ ] `http://localhost:8000/api/health` returns JSON
 - [ ] `http://localhost:8000/docs` shows the Swagger UI
 
-> **Stuck?** Compare with `reference/expense-tracker/backend/`
+> **Stuck?** Re-read the error message. Most issues here are missing dependencies or a port conflict. If your patterns look wrong, fix them now — everything builds on this.
 > **Off?** Fix the issue, update CLAUDE.md if a convention was wrong, then re-commit.
 
 ---
@@ -125,7 +125,7 @@ git commit -m "feat: scaffold React + Vite frontend with routing and placeholder
 - [ ] `npm run dev` starts the dev server
 - [ ] `http://localhost:5173` shows the app with navigation between pages
 
-> **Stuck?** Compare with `reference/expense-tracker/frontend/`
+> **Stuck?** If `npm install` fails, check your Node version (`node --version` — need 18+). If the page is blank, check the browser console for errors.
 
 ---
 

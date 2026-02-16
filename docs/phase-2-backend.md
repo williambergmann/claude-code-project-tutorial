@@ -64,7 +64,7 @@ git commit -m "feat: add database models for [your resources]"
 - [ ] Foreign key relationship is correct
 - [ ] No `Float` for money — use `Integer` (cents) or `Numeric`
 
-> **Stuck?** Compare with `reference/expense-tracker/backend/app/models/`
+> **Stuck?** If field names or types look wrong, tell Claude exactly what to change: "Change `created_at` to `transaction_date`. Use Integer for amount (storing cents)."
 
 ---
 
@@ -109,7 +109,7 @@ git commit -m "feat: add CRUD endpoints for [main resource]"
 - [ ] Delete it → returns 200
 - [ ] Get it again → returns 404
 
-> **Stuck?** Compare with `reference/expense-tracker/backend/app/routers/`
+> **Stuck?** If the server won't start, check the import in `main.py` — the router needs to be registered. If Swagger shows no endpoints, the router prefix might be wrong.
 
 ---
 
@@ -187,7 +187,7 @@ git commit -m "feat: add Alembic migrations with initial schema and notes field"
 - [ ] `alembic downgrade -1` and `alembic upgrade head` both work (reversible migration)
 - [ ] The Swagger UI still works with the new field
 
-> **Stuck?** Compare with `reference/expense-tracker/backend/alembic/`
+> **Stuck?** If autogenerate produces an empty migration, Alembic can't see your models. Check that `env.py` imports your models and sets `target_metadata` correctly.
 
 ---
 

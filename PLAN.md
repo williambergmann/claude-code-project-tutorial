@@ -71,19 +71,9 @@ claude-code-project-tutorial/
 │   │   └── SKILL.md              # Built in Phase 3 — scaffold a React component
 │   └── review-diff/
 │       └── SKILL.md              # Built in Phase 7 — review staged changes
-└── reference/                    # Completed implementations (one per project choice)
-    ├── expense-tracker/
-    ├── link-shortener/
-    └── task-board/
 ```
 
-The user creates their **own separate repo** and builds into it following the guide.
-
-### Reference Implementations
-
-Each project choice has a completed implementation in `reference/`. These include the full git history with tagged commits matching each phase so users can compare with `git log`.
-
-Tags follow the pattern: `v0-setup`, `v1-foundation`, `v2-backend`, etc.
+The user creates their **own separate repo** and builds into it following the guide. There are no pre-built reference implementations — the tutorial IS the reference. Each "Stuck?" hint provides specific troubleshooting advice instead of pointing to a completed project.
 
 ---
 
@@ -737,8 +727,8 @@ Each of these follows the same process: update REQUIREMENTS.md, update CLAUDE.md
 
 ## Decisions (Resolved)
 
-### 1. Reference implementations: both folders AND branches
-Completed implementations live in `reference/` folders for easy GitHub browsing. A separate `reference-history` branch contains the same code with tagged commits matching each phase (`v0-setup`, `v1-foundation`, etc.) so users can compare their git log against the intended progression.
+### 1. No pre-built reference implementations
+The tutorial IS the reference. Users build their own project from scratch. "Stuck?" hints provide specific troubleshooting advice for common issues at each step, rather than pointing to a completed codebase. This keeps the focus on the process (learning to work with Claude) rather than the output (a specific app).
 
 ### 2. Tracking files: mandatory in this tutorial, not universal
 CHANGELOG.md, REQUIREMENTS.md, and BUGS.md are mandatory steps in this tutorial — every phase includes updating them. But the guide frames this honestly: "This is how we structure this project. It's not required in every situation. Adapt to your own workflow." (Principle 9)
@@ -767,7 +757,7 @@ git add backend/
 git commit -m "feat: scaffold FastAPI backend with health endpoint"
 
 Ready? → Step 1.3
-Stuck? → Compare with reference/expense-tracker/
+Stuck? → Read the specific troubleshooting tip provided
 Need to adjust? → Update CLAUDE.md before continuing
 ```
 

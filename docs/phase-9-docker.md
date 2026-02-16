@@ -107,7 +107,7 @@ If something doesn't work, check the logs in the terminal. Common issues:
 
 Stop with `Ctrl+C` when you're done testing.
 
-> **Stuck?** Compare with `reference/expense-tracker/docker-compose.yml`
+> **Stuck?** Check `docker compose logs` for specific errors. Common fixes: update CORS to allow port 3000, set the API URL as an environment variable in the frontend build.
 
 ---
 

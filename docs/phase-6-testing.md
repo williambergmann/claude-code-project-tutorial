@@ -48,7 +48,7 @@ git commit -m "test: add CRUD endpoint tests for [main resource]"
 - [ ] All tests pass
 - [ ] Tests run in under 5 seconds
 
-> **Stuck?** Compare with `reference/expense-tracker/backend/tests/`
+> **Stuck?** If tests fail with database errors, make sure the test file creates its own in-memory SQLite database — don't share the dev database.
 
 ---
 

@@ -211,7 +211,7 @@ At every checkpoint you have three options:
 
 ```
  Ready?   → Move to the next step
- Stuck?   → Compare with the reference implementation
+ Stuck?   → Read the troubleshooting tip for that step
  Off?     → Update CLAUDE.md or fix the issue before continuing
 ```
 
@@ -292,18 +292,13 @@ claude-code-project-tutorial/
 │   ├── REQUIREMENTS.md
 │   └── BUGS.md
 │
-├── skills/                            ← Custom skills built during the tutorial
-│   ├── add-endpoint/SKILL.md          ← Phase 1: scaffold API endpoints
-│   ├── add-component/SKILL.md         ← Phase 3: scaffold React components
-│   └── review-diff/SKILL.md           ← Phase 7: pre-commit diff review
-│
-└── reference/                         ← Completed projects to compare against
-    ├── expense-tracker/
-    ├── link-shortener/
-    └── task-board/
+└── skills/                            ← Custom skills built during the tutorial
+    ├── add-endpoint/SKILL.md          ← Phase 1: scaffold API endpoints
+    ├── add-component/SKILL.md         ← Phase 3: scaffold React components
+    └── review-diff/SKILL.md           ← Phase 7: pre-commit diff review
 ```
 
-Reference implementations are also available on the `reference-history` branch with tagged commits matching each phase (`v0-setup` through `v9-docker`).
+There are no pre-built reference implementations. You build the project yourself — that's the point. Each "Stuck?" hint provides specific troubleshooting advice for common issues at that step.
 
 ---
 

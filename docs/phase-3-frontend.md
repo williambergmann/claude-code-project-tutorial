@@ -45,7 +45,7 @@ git commit -m "feat: add main resource list page with dummy data"
 - [ ] Navigation to the page works
 - [ ] The table/list renders with dummy data
 
-> **Stuck?** Compare with `reference/expense-tracker/frontend/src/pages/`
+> **Stuck?** If the page doesn't render, check that `App.jsx` has a route pointing to your new page component. If it renders but looks wrong, compare with the existing pages Claude generated in Phase 1 for pattern consistency.
 
 ---
 
