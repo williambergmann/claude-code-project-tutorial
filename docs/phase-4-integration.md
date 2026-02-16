@@ -27,19 +27,15 @@ Do NOT use a wildcard "*" for origins.
 | Are `allow_methods` restricted? | Should be `["GET", "POST", "PUT", "DELETE"]`, not `["*"]`. |
 | Is `allow_headers` reasonable? | `["Content-Type"]` is usually enough. Not `["*"]`. |
 
-**This is the planted bug checkpoint.** Claude almost always sets CORS to `*` unless you explicitly tell it not to. If it did, you just caught your first real bug — log it:
+**This is the planted bug checkpoint.** Claude almost always sets CORS to `*` unless you explicitly tell it not to. If it did, you just caught your first real bug — let Claude log it:
 
-Open BUGS.md and add:
-
-```markdown
-## BUG-001: CORS set to wildcard
-- **Found in:** Phase 4, Step 4.1
-- **Severity:** Medium
-- **Description:** Claude set CORS allow_origins to ["*"] instead of restricting to localhost:5173
-- **Root cause:** AI code is not optimized for security by default (Principle 11)
-- **Fix:** Changed to ["http://localhost:5173"]
-- **Status:** Fixed
 ```
+You just set CORS allow_origins to ["*"]. That's a security issue — it should be restricted to http://localhost:5173.
+1. Fix the CORS configuration
+2. Log this as BUG-001 in BUGS.md with: what was wrong, why (AI code is not optimized for security by default), and how it was fixed
+```
+
+Review the BUGS.md entry Claude writes. This is how BUGS.md stays alive — the agent populates it as bugs are found, not as a chore at the end.
 
 **Commit:**
 ```bash
@@ -130,14 +126,16 @@ git commit -m "feat: add filter by [category/status] with query parameter"
 
 ## Step 4.4: Review and Log Any Bugs
 
-Look through the code Claude has generated in this phase. Common issues to check:
+Let Claude do a sweep and update all tracking files at once:
 
-- Are there any hardcoded values that should be configurable?
-- Is error handling consistent between endpoints?
-- Are there any console.logs left in the frontend?
-- Does the filter reset properly?
+```
+Review the code we built in Phase 4. Then:
+1. Check for any issues: hardcoded values, inconsistent error handling, leftover console.logs, broken filter reset. Log anything you find in BUGS.md.
+2. Add a Phase 4 entry to CHANGELOG.md summarizing the integration work
+3. Check off completed items in REQUIREMENTS.md for Phase 4
+```
 
-Log anything you find in BUGS.md.
+**Review what Claude wrote.** Did it find real issues or just pad the bug list? Are the CHANGELOG entries accurate?
 
 **Commit + push:**
 ```bash

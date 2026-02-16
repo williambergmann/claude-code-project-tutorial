@@ -175,6 +175,18 @@ Now **edit CLAUDE.md** — replace the placeholders:
 
 This is your file. Make it yours (P9).
 
+### Why these files matter for agentic programming
+
+These aren't just files for you to read. They're files Claude reads too.
+
+**CLAUDE.md** is the obvious one — Claude reads it at the start of every session. But the tracking files serve a dual purpose:
+
+- **REQUIREMENTS.md** tells Claude what's been built and what's left. When you prompt "update REQUIREMENTS.md to reflect what we just built," Claude reviews its own work and checks off completed items. You review what it checked off. This is the agentic workflow: *prompt → agent acts → you verify*.
+- **BUGS.md** gives Claude context about known issues. When you prompt "check if any open bugs in BUGS.md are affected by this change," Claude reads the file and cross-references.
+- **CHANGELOG.md** trains Claude on what happened in each phase. When you `/clear` and start a new session, Claude reads CHANGELOG.md alongside CLAUDE.md to understand project history.
+
+The pattern throughout this tutorial: **don't manually update tracking files — prompt Claude to update them, then review what it writes.** This keeps the agent in the loop and gives you practice reviewing AI-generated documentation, not just AI-generated code.
+
 **Verify before continuing:**
 - [ ] CLAUDE.md exists with your project name and description
 - [ ] .gitignore, CHANGELOG.md, REQUIREMENTS.md, BUGS.md all exist

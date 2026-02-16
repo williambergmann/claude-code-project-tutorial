@@ -173,22 +173,20 @@ Wait — we just said never use `git add -A`. In this case, review `git status` 
 
 ---
 
-## Step 5.6: Update Tracking Files
+## Step 5.6: Let Claude Update the Tracking Files
 
-Update CHANGELOG.md:
-```markdown
-### Phase 5 — Parallel Work
-- Added search/filter feature (parallel agent 1)
-- Added CSV export feature (parallel agent 2)
-- Set up GitHub MCP for team workflow
-- Both features merged cleanly
+```
+Review what we built in Phase 5. Then:
+1. Add a Phase 5 entry to CHANGELOG.md — mention that two features were built in parallel, and whether the merge was clean
+2. Check off completed items in REQUIREMENTS.md for Phase 5
+3. Check BUGS.md — did the merge introduce any issues? Log them if so.
 ```
 
-Update REQUIREMENTS.md — check off Phase 5 items.
+Review what Claude wrote.
 
 **Commit + push:**
 ```bash
-git add CHANGELOG.md REQUIREMENTS.md
+git add CHANGELOG.md REQUIREMENTS.md BUGS.md
 git commit -m "docs: update tracking files for Phase 5"
 git push
 ```

@@ -173,9 +173,20 @@ Before you commit anything else, try your new workflow:
 
 This is the workflow you should use for every meaningful commit going forward. It takes 30 seconds and catches real bugs.
 
+Now let Claude wrap up the tracking files:
+
+```
+Review what we built in Phase 7. Then:
+1. Add a Phase 7 entry to CHANGELOG.md — mention security findings, a11y fixes, the new skill, and the lint hook
+2. Check off completed items in REQUIREMENTS.md for Phase 7
+3. Update BUGS.md — log any security or accessibility issues found (even if already fixed)
+```
+
+Review what Claude wrote.
+
 **Commit + push:**
 ```bash
-git add CHANGELOG.md REQUIREMENTS.md
+git add CHANGELOG.md REQUIREMENTS.md BUGS.md
 git commit -m "docs: update tracking files for Phase 7"
 git push
 ```

@@ -130,21 +130,20 @@ git commit -m "test: add coverage for critical paths and edge cases"
 
 ---
 
-## Step 6.4: Update Tracking Files
+## Step 6.4: Let Claude Update the Tracking Files
 
-Update CHANGELOG.md:
-```markdown
-### Phase 6 — Testing
-- Added backend API tests with pytest (in-memory SQLite)
-- Added frontend component tests with Vitest + React Testing Library
-- Coverage: [X]% backend, [X]% frontend
+```
+Review what we built in Phase 6. Then:
+1. Add a Phase 6 entry to CHANGELOG.md — include the actual coverage numbers from the test reports
+2. Check off completed items in REQUIREMENTS.md for Phase 6
+3. If any tests revealed bugs we haven't fixed, add them to BUGS.md
 ```
 
-Update REQUIREMENTS.md — check off Phase 6 items.
+Review what Claude wrote — did it include the real coverage numbers, or make them up?
 
 **Commit + push:**
 ```bash
-git add CHANGELOG.md REQUIREMENTS.md
+git add CHANGELOG.md REQUIREMENTS.md BUGS.md
 git commit -m "docs: update tracking files for Phase 6"
 git push
 ```

@@ -73,7 +73,17 @@ Run the commands Claude provides, or set up manually:
 
 **Why this matters:** With branch protection + CI, parallel work from Phase 5 has a safety net. Two agents can work on separate branches, but nothing merges to main unless tests pass (P2 + P10).
 
-**Commit:**
+Let Claude update the tracking files:
+
+```
+Review what we set up in Phase 8. Then:
+1. Add a Phase 8 entry to CHANGELOG.md — mention the CI workflow and branch protection
+2. Check off completed items in REQUIREMENTS.md for Phase 8
+```
+
+Review what Claude wrote.
+
+**Commit + push:**
 ```bash
 git add CHANGELOG.md REQUIREMENTS.md
 git commit -m "docs: update tracking files for Phase 8"

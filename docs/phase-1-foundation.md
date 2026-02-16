@@ -195,17 +195,23 @@ git commit -m "feat: add /add-endpoint custom skill"
 
 ---
 
-## Step 1.6: Update Tracking Files
+## Step 1.6: Let Claude Update the Tracking Files
 
-Update CHANGELOG.md:
-```markdown
-### Phase 1 — Foundation
-- Scaffolded FastAPI backend with health endpoint and SQLite
-- Scaffolded React + Vite frontend with routing
-- Created /add-endpoint custom skill
+Don't update these manually — prompt Claude to do it. This is part of the agentic workflow.
+
+```
+Review what we built in this phase. Then:
+1. Add a Phase 1 entry to CHANGELOG.md summarizing what was created
+2. Check off completed items in REQUIREMENTS.md for Phase 1
+3. If anything in REQUIREMENTS.md doesn't match what we actually built, note the difference
 ```
 
-Update REQUIREMENTS.md — check off Phase 1 items.
+**Review what Claude wrote:**
+- [ ] CHANGELOG.md entry is accurate (not overstated, not missing anything)
+- [ ] REQUIREMENTS.md has the right items checked off
+- [ ] Claude didn't check off items that aren't actually done
+
+This is the same review discipline as code — AI-generated documentation needs verification too.
 
 **Commit + push:**
 ```bash

@@ -174,22 +174,21 @@ git commit -m "feat: add /add-component custom skill"
 
 ---
 
-## Step 3.6: Update Tracking Files
+## Step 3.6: Let Claude Update the Tracking Files
 
-Update CHANGELOG.md:
-```markdown
-### Phase 3 — Frontend Core
-- Created list page, form component, and API client module
-- Added delete with confirmation
-- Created /add-component custom skill
+```
+Review what we built in Phase 3. Then:
+1. Add a Phase 3 entry to CHANGELOG.md summarizing the components, API client, and skill we created
+2. Check off completed items in REQUIREMENTS.md for Phase 3
+3. If anything we built doesn't appear in REQUIREMENTS.md, add it
 ```
 
-Update REQUIREMENTS.md — check off Phase 3 items.
+**Review what Claude wrote** — same discipline as code review. Did it accurately capture what was built? Did it check off items that are actually done?
 
 **Commit + push:**
 ```bash
 git add CHANGELOG.md REQUIREMENTS.md
-git commit -m "docs: update changelog and requirements for Phase 3"
+git commit -m "docs: update tracking files for Phase 3"
 git push
 ```
 

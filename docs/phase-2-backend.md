@@ -204,12 +204,22 @@ Common additions:
 - "Pydantic schemas go in `schemas/{resource}.py` with `Create`, `Update`, and `Response` variants"
 - "Database sessions use dependency injection via `get_db()`"
 
-Add the useful ones to CLAUDE.md manually. This is your file (P9).
+Add the useful ones to CLAUDE.md. This is your file (P9).
+
+Now let Claude update the tracking files:
+
+```
+Review what we built in Phase 2. Then:
+1. Add a Phase 2 entry to CHANGELOG.md summarizing models, endpoints, and migrations
+2. Check off completed items in REQUIREMENTS.md for Phase 2
+```
+
+Review what Claude wrote — make sure it's accurate.
 
 **Commit + push:**
 ```bash
-git add CLAUDE.md REQUIREMENTS.md
-git commit -m "docs: update CLAUDE.md with backend conventions, check off Phase 2 requirements"
+git add CLAUDE.md CHANGELOG.md REQUIREMENTS.md
+git commit -m "docs: update CLAUDE.md with backend conventions, update tracking files for Phase 2"
 git push
 ```
 

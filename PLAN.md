@@ -694,19 +694,21 @@ This tutorial is designed to fit within one $20 Claude Code Pro session (~60-75 
 
 ---
 
-## Tracking Files
+## Tracking Files (Agent-Populated)
+
+These files serve a dual purpose: they track progress for the human AND provide context for the agent. Claude reads them when it `/clear`s and starts fresh. The key pattern: **don't update these manually — prompt Claude to update them, then review what it writes.**
 
 ### REQUIREMENTS.md
-Pre-populated with all features organized by phase. Users check them off as they go. Minimal format — just checkboxes and short descriptions.
+Pre-populated with all features organized by phase. At the end of each phase, prompt Claude: "Check off completed items in REQUIREMENTS.md." Claude reads the file, evaluates what's done, and updates it. You review the changes — same as reviewing code.
 
 ### CHANGELOG.md
-Updated at the end of each phase. Format: date, phase number, what was added. A few starter entries shown as examples. Not a detailed log — just enough to see progress.
+Updated at the end of each phase via prompt. Claude summarizes what was built, including specifics it knows (coverage numbers, feature names, issues fixed). This gives Claude history to reference when it `/clear`s and re-reads project files.
 
 ### BUGS.md
-Starts empty (format shown). Gets its first real entry in Phase 4 when the planted bug surfaces. This makes it feel useful rather than ceremonial.
+Starts empty (format shown). Gets its first real entry in Phase 4 when Claude introduces a CORS bug and is prompted to log it. From then on, any time a bug is found during development, Claude is prompted to add it to BUGS.md. This makes the file a living record, not a retrospective chore.
 
 ### CLAUDE.md
-The core project context file. Starts as a starter template in Phase 0. Evolves through every phase. This is the most important file in the project for Claude Code workflow.
+The core project context file. Starts as a starter template in Phase 0. Evolves through every phase. References the tracking files so Claude knows to read them for context. This is the most important file in the project for Claude Code workflow.
 
 ---
 

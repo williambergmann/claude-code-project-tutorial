@@ -52,6 +52,14 @@ docker compose up --build
 docker compose down
 ```
 
+## Tracking Files
+These files are part of your context — read them when you need project history or status:
+- **REQUIREMENTS.md** — Feature checklist by phase. When you complete work, update it to reflect what's done.
+- **CHANGELOG.md** — What was built in each phase. Update it at the end of each phase.
+- **BUGS.md** — Known issues. When you find or introduce a bug, log it here with what happened and how it was fixed.
+
+When asked to update tracking files, read them first, then make accurate changes. Don't check off items that aren't actually complete.
+
 ## What NOT to Do
 - Do NOT use `created_at` for business dates (use specific fields like `transaction_date`, `due_date`, etc.)
 - Do NOT set CORS to `*` — restrict to `http://localhost:5173` in development
